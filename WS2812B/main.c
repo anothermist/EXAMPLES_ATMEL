@@ -2,7 +2,7 @@
 
 #define length 300
 #define saturation 1.00  // 0.00 ~ 1.00
-#define brightness 0.10  // 0.00 ~ 1.00
+#define brightness 0.05  // 0.00 ~ 1.00
 
 struct cRGB led[length];
 struct RGB { uint8_t R; uint8_t G; uint8_t B; };
@@ -88,11 +88,11 @@ int main(void) {
 	ws2812_setleds(led, length);
 	_delay_ms(1000);
 	
-	uint16_t move_delay = 50;
+	uint16_t move_delay = 100;
 	//int8_t direction = 1;
-	uint8_t position = 0;
+	uint16_t position = 0;
 	
-	for (int i = 0; i < length; i++) {
+	for (uint16_t i = 0; i < length; i++) {
 		struct HSV data = { i*(360/length), saturation, brightness };
 		struct RGB value = HSVToRGB(data);
 		led[i].r=value.R; led[i].g=value.G; led[i].b=value.B;
