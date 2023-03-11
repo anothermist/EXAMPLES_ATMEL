@@ -1,9 +1,11 @@
 #include "main.h"
 
-#define length 40
-struct cRGB led[length];
+#define length 300
+#define saturation 1.00  // 0.00 ~ 1.00
+#define brightness 0.10  // 0.00 ~ 1.00
 
-struct RGB { unsigned char R; unsigned char G; unsigned char B; };
+struct cRGB led[length];
+struct RGB { uint8_t R; uint8_t G; uint8_t B; };
 struct HSV { double H; double S; double V; };
 
 struct RGB HSVToRGB(struct HSV hsv) {
@@ -80,53 +82,54 @@ struct RGB HSVToRGB(struct HSV hsv) {
 
 int main(void) {
 	
-	for (int i=0; i<length; i++) {
+	for (uint16_t i=0; i<length; i++) {
 		led[i].r=1; led[i].g=1; led[i].b=1;
 	}
 	ws2812_setleds(led, length);
 	_delay_ms(1000);
 	
-	//uint8_t pos = 0;
-	//uint8_t direction = 1;
+	uint16_t move_delay = 50;
+	//int8_t direction = 1;
+	uint8_t position = 0;
 	
 	for (int i = 0; i < length; i++) {
-		struct HSV data = { i*(360/length), 1, 0.02 };
+		struct HSV data = { i*(360/length), saturation, brightness };
 		struct RGB value = HSVToRGB(data);
 		led[i].r=value.R; led[i].g=value.G; led[i].b=value.B;
 	}
-	ws2812_setleds(led, length);
-	
-	_delay_ms(1000);
-	
 	
 	while(1) {
-	uint8_t tempR = led[0].r;
-	uint8_t tempG = led[0].g;
-	uint8_t tempB = led[0].b;
-	
-	for (uint8_t i = 0; i < (length - 1); i++) {
-	led[i].r = led[i+1].r;
-	led[i].g = led[i+1].g;
-	led[i].b = led[i+1].b;
-	}
-	led[length-1].r = tempR;
-	led[length-1].g = tempG;
-	led[length-1].b = tempB;
-	
-	ws2812_setleds(led, length);
-	_delay_ms(100);
-	
-	
-	//for (uint8_t i=0; i<pos; i++)
-	//ws2812_send((uint8_t *)&led[1]);
-	//
-	//_delay_ms(100);
-	//
-	//for (uint8_t i=0; i<(length-pos); i++)
-	//ws2812_send((uint8_t *)&led[26]);
-	//
-	//pos+=direction;
-	//if ((pos==40)||(pos==0)) direction=-direction;
-	
+		
+		struct HSV data = { position*(360/(length)), saturation, brightness };
+		struct RGB value = HSVToRGB(data);
+
+		uint8_t tempR = value.R; // led[0].r;
+		uint8_t tempG = value.G; // led[0].g;
+		uint8_t tempB = value.B; // led[0].b;
+		
+		for (uint16_t i = 0; i < (length-1); i++) {
+		led[i].r = led[i+1].r;
+		led[i].g = led[i+1].g;
+		led[i].b = led[i+1].b;
+		}
+		led[length-1].r = tempR;
+		led[length-1].g = tempG;
+		led[length-1].b = tempB;
+		
+		ws2812_setleds(led, length);
+		position++;
+		if (position == length) position = 0;
+		_delay_ms(move_delay);
+		
+		
+		//for (uint8_t i=0; i<position; i++)
+		//ws2812_send((uint8_t *)&led[1]);
+		//
+		//for (uint8_t i=0; i<(length-position); i++)
+		//ws2812_send((uint8_t *)&led[26]);
+		//
+		//position+=direction;
+		//if ((position==40)||(position==0)) direction=-direction;
+		//_delay_ms(move_delay);
 	}
 }
