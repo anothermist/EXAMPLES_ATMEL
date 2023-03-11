@@ -2,7 +2,7 @@
 
 #define length 300
 #define saturation 1.00  // 0.00 ~ 1.00
-#define brightness 0.05  // 0.00 ~ 1.00
+#define brightness 0.01  // 0.00 ~ 1.00
 
 struct cRGB led[length];
 struct RGB { uint8_t R; uint8_t G; uint8_t B; };
@@ -88,7 +88,7 @@ int main(void) {
 	ws2812_setleds(led, length);
 	_delay_ms(1000);
 	
-	uint16_t move_delay = 100;
+	uint16_t move_delay = 1;
 	//int8_t direction = 1;
 	uint16_t position = 0;
 	
