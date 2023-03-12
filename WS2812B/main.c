@@ -2,7 +2,9 @@
 
 #define length 600
 #define saturation 1.000  // 0.00 ~ 1.00
-#define brightness 0.100  // 0.00 ~ 1.00
+#define brightness 0.025  // 0.00 ~ 1.00
+
+#define rainbow_leds 300  // 0.00 ~ 1.00
 
 struct cRGB led[length];
 
@@ -48,29 +50,32 @@ int main(void) {
 		led[i].r=1; led[i].g=1; led[i].b=1;
 	}
 	ws2812_setleds(led, length);
-	_delay_ms(500);
+	_delay_ms(1000);
 	
 	uint16_t move_delay = 25;
 	int8_t direction = 1;
 	uint16_t position = 0;
 	
 	//for (uint16_t i = 0; i < length; i++) {
-	//struct HSV data = { i*(360/length), saturation, brightness };
-	//struct RGB value = HSVToRGB(data);
-	//led[i].r=value.R; led[i].g=value.G; led[i].b=value.B;
+		//struct HSV data = { i * (360 / (length % 360 )), saturation, brightness };
+		//struct RGB value = HSVToRGB(data);
+		//led[i].r = value.R;
+		//led[i].g = value.G;
+		//led[i].b = value.B;
 	//}
 	
 	while(1) {
 		
-		struct HSV data = { position*(360 / (length % 360)), saturation, brightness };
+		struct HSV data = { position * (360 / (rainbow_leds % 360 )), saturation, brightness };
 		struct RGB value = HSVToRGB(data);
 		
-		for (uint16_t i = 0; i < (length - 1); i++) {
-			if (direction) {
-				led[(length - 1) - i].r = led[(length - 2) - i].r;
-				led[(length - 1) - i].g = led[(length - 2) - i].g;
-				led[(length - 1) - i].b = led[(length - 2) - i].b;
-				} else {
+		for (uint16_t i = 0; i < (rainbow_leds - 1); i++) {
+			if (direction) {		
+				led[(rainbow_leds - 1) - i].r = led[(rainbow_leds - 2) - i].r;
+				led[(rainbow_leds - 1) - i].g = led[(rainbow_leds - 2) - i].g;
+				led[(rainbow_leds - 1) - i].b = led[(rainbow_leds - 2) - i].b;
+			}
+			else {				
 				led[i].r = led[i + 1].r;
 				led[i].g = led[i + 1].g;
 				led[i].b = led[i + 1].b;
@@ -81,17 +86,17 @@ int main(void) {
 			led[0].g = value.G;
 			led[0].b = value.B;
 			} else {
-			led[length - 1].r = value.R;
-			led[length - 1].g = value.G;
-			led[length - 1].b = value.B;
+			led[rainbow_leds - 1].r = value.R;
+			led[rainbow_leds - 1].g = value.G;
+			led[rainbow_leds - 1].b = value.B;
 		}
-		ws2812_setleds(led, length);
+		ws2812_setleds(led, rainbow_leds);
 		position++;
-		if (position == length) position = 0;
+		if (position == rainbow_leds) position = 0;
 		_delay_ms(move_delay);
 		
-		//led[0].r=255; led[0].g=0; led[0].b=0;
-		//led[1].r=0;   led[1].g=0; led[1].b=255;
+		//led[0].r=8; led[0].g=0; led[0].b=0;
+		//led[1].r=0; led[1].g=0; led[1].b=8;
 		//
 		//for (uint16_t i = 0; i < position; i++)
 		//ws2812_send((uint8_t *)&led[0]);
@@ -101,7 +106,7 @@ int main(void) {
 		//
 		//position+=direction;
 		//if ((position == length)||(position == 0)) direction =- direction;
-		//_delay_ms(move_delay);
+		//_delay_ms(move_delay);	
 		
 	}
 }

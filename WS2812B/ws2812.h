@@ -9,7 +9,7 @@
 #define LED_DATA_PIN  0
 #define LED_DATA_PORT C
 #define LED_RESETTIME  50 // WS2812 and clones only need 50 µs, WS2813 needs 300 µs reset time
-#define INTERRUPT_DISABLE // Normally ws2812_sendarray_mask() runs under disabled-interrupt condition, undefine if you want to accept interrupts in that function.
+//#define INTERRUPT_DISABLE // Normally ws2812_sendarray_mask() runs under disabled-interrupt condition, undefine if you want to accept interrupts in that function.
 
 #define CONCAT(a, b)            a ## b
 #define CONCAT_EXP(a, b)   CONCAT(a, b)
