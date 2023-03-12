@@ -33,29 +33,29 @@ void ws2812_sendarray(uint8_t *data, uint16_t datlen) {
 #define w_fixedhigh   4
 #define w_fixedtotal  8   
 
-#define w_zerocycles    (((F_CPU/1000)*w_zeropulse          )/1000000) // Insert NOPs to match the timing, if possible
-#define w_onecycles     (((F_CPU/1000)*w_onepulse    +500000)/1000000)
-#define w_totalcycles   (((F_CPU/1000)*w_totalperiod +500000)/1000000)
+#define w_zerocycles    (((F_CPU/1000) * w_zeropulse          )/1000000) // Insert NOPs to match the timing, if possible
+#define w_onecycles     (((F_CPU/1000) * w_onepulse    +500000)/1000000)
+#define w_totalcycles   (((F_CPU/1000) * w_totalperiod +500000)/1000000)
 
 #define w1 (w_zerocycles-w_fixedlow)          // w1 - nops between rising edge and falling edge - low
 #define w2 (w_onecycles-w_fixedhigh-w1)       // w2   nops between fe low and fe high
 #define w3 (w_totalcycles-w_fixedtotal-w1-w2) // w3   nops to complete loop
 
-#if w1>0
+#if w1 > 0
   #define w1_nops w1
 #else
   #define w1_nops  0
 #endif
 
-#define w_lowtime ((w1_nops+w_fixedlow)*1000000)/(F_CPU/1000)
+#define w_lowtime ((w1_nops + w_fixedlow)*1000000)/(F_CPU/1000)
 
-#if w2>0
+#if w2 > 0
 #define w2_nops w2
 #else
 #define w2_nops  0
 #endif
 
-#if w3>0
+#if w3 > 0
 #define w3_nops w3
 #else
 #define w3_nops  0
@@ -72,21 +72,21 @@ void ws2812_sendarray(uint8_t *data, uint16_t datlen) {
 #define w_nop16 w_nop8 w_nop8
 
 void inline ws2812_sendarray_mask(uint8_t *data, uint16_t datlen, uint8_t maskhi) {
-  uint8_t curbyte,ctr,masklo;
+  uint8_t curbyte, ctr, masklo;
   uint8_t sreg_prev;
   
   WS2812_DDRREG |= maskhi;
   
-  masklo	=~maskhi&WS2812_PORTREG;
-  maskhi |=        WS2812_PORTREG;
+  masklo =~ maskhi & WS2812_PORTREG;
+  maskhi |= WS2812_PORTREG;
   
-  sreg_prev=SREG;
+  sreg_prev = SREG;
 #ifdef INTERRUPT_DISABLE
   cli();  
 #endif  
 
   while (datlen--) {
-    curbyte=*data++;
+    curbyte =*data++;
     
     asm volatile(
     "       ldi   %0,8  \n\t"
@@ -151,6 +151,5 @@ w_nop16
     :	"r" (curbyte), "I" (_SFR_IO_ADDR(WS2812_PORTREG)), "r" (maskhi), "r" (masklo)
     );
   }
-  
-  SREG=sreg_prev;
+  SREG = sreg_prev;
 }

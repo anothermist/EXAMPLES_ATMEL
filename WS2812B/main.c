@@ -2,7 +2,7 @@
 
 #define length 300
 #define saturation 1.00  // 0.00 ~ 1.00
-#define brightness 0.01  // 0.00 ~ 1.00
+#define brightness 0.03  // 0.00 ~ 1.00
 
 struct cRGB led[length];
 struct RGB { uint8_t R; uint8_t G; uint8_t B; };
@@ -82,13 +82,13 @@ struct RGB HSVToRGB(struct HSV hsv) {
 
 int main(void) {
 	
-	for (uint16_t i=0; i<length; i++) {
+	for (uint16_t i=0; i < length; i++) {
 		led[i].r=1; led[i].g=1; led[i].b=1;
 	}
 	ws2812_setleds(led, length);
-	_delay_ms(1000);
+	_delay_ms(500);
 	
-	uint16_t move_delay = 1;
+	uint16_t move_delay = 25;
 	//int8_t direction = 1;
 	uint16_t position = 0;
 	
@@ -102,34 +102,37 @@ int main(void) {
 		
 		struct HSV data = { position*(360/(length)), saturation, brightness };
 		struct RGB value = HSVToRGB(data);
-
+		
 		uint8_t tempR = value.R; // led[0].r;
 		uint8_t tempG = value.G; // led[0].g;
 		uint8_t tempB = value.B; // led[0].b;
 		
-		for (uint16_t i = 0; i < (length-1); i++) {
-		led[i].r = led[i+1].r;
-		led[i].g = led[i+1].g;
-		led[i].b = led[i+1].b;
+		for (uint16_t i = 0; i < (length - 1); i++) {
+			led[i].r = led[i + 1].r;
+			led[i].g = led[i + 1].g;
+			led[i].b = led[i + 1].b;
 		}
-		led[length-1].r = tempR;
-		led[length-1].g = tempG;
-		led[length-1].b = tempB;
+		led[length - 1].r = tempR;
+		led[length - 1].g = tempG;
+		led[length - 1].b = tempB;
 		
 		ws2812_setleds(led, length);
 		position++;
 		if (position == length) position = 0;
 		_delay_ms(move_delay);
-		
-		
-		//for (uint8_t i=0; i<position; i++)
-		//ws2812_send((uint8_t *)&led[1]);
-		//
-		//for (uint8_t i=0; i<(length-position); i++)
-		//ws2812_send((uint8_t *)&led[26]);
-		//
-		//position+=direction;
-		//if ((position==40)||(position==0)) direction=-direction;
-		//_delay_ms(move_delay);
 	}
+	
+	//led[0].r=255; led[0].g=0; led[0].b=0;
+	//led[1].r=0;   led[1].g=0; led[1].b=255;
+	//
+	//for (uint16_t i = 0; i < position; i++)
+	//ws2812_send((uint8_t *)&led[0]);
+	//
+	//for (uint16_t i = 0; i < (length - position); i++)
+	//ws2812_send((uint8_t *)&led[1]);
+	//
+	//position+=direction;
+	//if ((position == length)||(position == 0)) direction =- direction;
+	//_delay_ms(move_delay);
+	//}
 }
