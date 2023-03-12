@@ -1,8 +1,8 @@
 #include "main.h"
 
-#define length 300
-#define saturation 1.00  // 0.00 ~ 1.00
-#define brightness 0.03  // 0.00 ~ 1.00
+#define length 600
+#define saturation 1.000  // 0.00 ~ 1.00
+#define brightness 0.100  // 0.00 ~ 1.00
 
 struct cRGB led[length];
 
@@ -17,7 +17,8 @@ struct RGB HSVToRGB(struct HSV hsv) {
 		uint16_t i;
 		double f, p, q, t;
 
-		if (hsv.H == 360) hsv.H = 0; else hsv.H = hsv.H / 60;
+		if (hsv.H == 360) hsv.H = 0;
+		else hsv.H = hsv.H / 60;
 
 		i = (uint16_t)trunc(hsv.H);
 		f = hsv.H - i;
@@ -61,7 +62,7 @@ int main(void) {
 	
 	while(1) {
 		
-		struct HSV data = { position*(360/(length)), saturation, brightness };
+		struct HSV data = { position*(360 / (length % 360)), saturation, brightness };
 		struct RGB value = HSVToRGB(data);
 		
 		for (uint16_t i = 0; i < (length - 1); i++) {
