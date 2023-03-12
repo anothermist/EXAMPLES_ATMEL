@@ -50,13 +50,13 @@ int main(void) {
 	_delay_ms(500);
 	
 	uint16_t move_delay = 25;
-	//int8_t direction = 1;
+	int8_t direction = 1;
 	uint16_t position = 0;
 	
 	//for (uint16_t i = 0; i < length; i++) {
-		//struct HSV data = { i*(360/length), saturation, brightness };
-		//struct RGB value = HSVToRGB(data);
-		//led[i].r=value.R; led[i].g=value.G; led[i].b=value.B;
+	//struct HSV data = { i*(360/length), saturation, brightness };
+	//struct RGB value = HSVToRGB(data);
+	//led[i].r=value.R; led[i].g=value.G; led[i].b=value.B;
 	//}
 	
 	while(1) {
@@ -65,14 +65,25 @@ int main(void) {
 		struct RGB value = HSVToRGB(data);
 		
 		for (uint16_t i = 0; i < (length - 1); i++) {
-			led[i].r = led[i + 1].r;
-			led[i].g = led[i + 1].g;
-			led[i].b = led[i + 1].b;
+			if (direction) {
+				led[(length - 1) - i].r = led[(length - 2) - i].r;
+				led[(length - 1) - i].g = led[(length - 2) - i].g;
+				led[(length - 1) - i].b = led[(length - 2) - i].b;
+				} else {
+				led[i].r = led[i + 1].r;
+				led[i].g = led[i + 1].g;
+				led[i].b = led[i + 1].b;
+			}
 		}
-		led[length - 1].r = value.R;
-		led[length - 1].g = value.G;
-		led[length - 1].b = value.B;
-		
+		if (direction) {
+			led[0].r = value.R;
+			led[0].g = value.G;
+			led[0].b = value.B;
+			} else {
+			led[length - 1].r = value.R;
+			led[length - 1].g = value.G;
+			led[length - 1].b = value.B;
+		}
 		ws2812_setleds(led, length);
 		position++;
 		if (position == length) position = 0;
