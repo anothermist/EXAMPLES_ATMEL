@@ -17,4 +17,4 @@ void uartTransmitString_F(const char*);
 void uartTransmitHex(unsigned char dataType, uint32_t data);
 void uartNewLine();
 
-#endif
+#endif /* UART_H_ */
