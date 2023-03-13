@@ -1,28 +1,28 @@
-#include "ws2812.h"
+#include "ledstrip.h"
 #include <avr/interrupt.h>
 #include <avr/io.h>
 #include <util/delay.h>
 
-void inline ws2812_send(uint8_t *data) {
-	ws2812_sendarray_mask(data, 3, _BV(LED_DATA_PIN));
+void inline ledstrip_send(uint8_t *data) {
+	ledstrip_sendarray_mask(data, 3, _BV(LED_DATA_PIN));
 }
 
-void inline ws2812_setleds(struct cRGB *ledarray, uint16_t leds) {
-   ws2812_setleds_pin(ledarray, leds, _BV(LED_DATA_PIN));
+void inline ledstrip_setleds(struct cRGB *ledarray, uint16_t leds) {
+   ledstrip_setleds_pin(ledarray, leds, _BV(LED_DATA_PIN));
 }
 
-void inline ws2812_setleds_pin(struct cRGB *ledarray, uint16_t leds, uint8_t pinmask) {
-  ws2812_sendarray_mask((uint8_t*)ledarray, leds+leds+leds, pinmask);
+void inline ledstrip_setleds_pin(struct cRGB *ledarray, uint16_t leds, uint8_t pinmask) {
+  ledstrip_sendarray_mask((uint8_t*)ledarray, leds+leds+leds, pinmask);
   _delay_us(LED_RESETTIME);
 }
 
-void inline ws2812_setleds_rgbw(struct cRGBW *ledarray, uint16_t leds) {
-  ws2812_sendarray_mask((uint8_t*)ledarray, leds<<2, _BV(LED_DATA_PIN));
+void inline ledstrip_setleds_rgbw(struct cRGBW *ledarray, uint16_t leds) {
+  ledstrip_sendarray_mask((uint8_t*)ledarray, leds<<2, _BV(LED_DATA_PIN));
   _delay_us(LED_RESETTIME);
 }
 
-void ws2812_sendarray(uint8_t *data, uint16_t datlen) {
-  ws2812_sendarray_mask(data, datlen, _BV(LED_DATA_PIN));
+void ledstrip_sendarray(uint8_t *data, uint16_t datlen) {
+  ledstrip_sendarray_mask(data, datlen, _BV(LED_DATA_PIN));
 }
 
 #define w_zeropulse   350  // Timing in ns
@@ -71,14 +71,14 @@ void ws2812_sendarray(uint8_t *data, uint16_t datlen) {
 #define w_nop8  w_nop4 w_nop4
 #define w_nop16 w_nop8 w_nop8
 
-void inline ws2812_sendarray_mask(uint8_t *data, uint16_t datlen, uint8_t maskhi) {
+void inline ledstrip_sendarray_mask(uint8_t *data, uint16_t datlen, uint8_t maskhi) {
   uint8_t curbyte, ctr, masklo;
   uint8_t sreg_prev;
   
-  WS2812_DDRREG |= maskhi;
+  ledstrip_DDRREG |= maskhi;
   
-  masklo =~ maskhi & WS2812_PORTREG;
-  maskhi |= WS2812_PORTREG;
+  masklo =~ maskhi & ledstrip_PORTREG;
+  maskhi |= ledstrip_PORTREG;
   
   sreg_prev = SREG;
 #ifdef INTERRUPT_DISABLE
@@ -148,7 +148,7 @@ w_nop16
     "       dec   %0    \n\t"    //  '1' [+2] '0' [+2]
     "       brne  loop%=\n\t"    //  '1' [+3] '0' [+4]
     :	"=&d" (ctr)
-    :	"r" (curbyte), "I" (_SFR_IO_ADDR(WS2812_PORTREG)), "r" (maskhi), "r" (masklo)
+    :	"r" (curbyte), "I" (_SFR_IO_ADDR(ledstrip_PORTREG)), "r" (maskhi), "r" (masklo)
     );
   }
   SREG = sreg_prev;

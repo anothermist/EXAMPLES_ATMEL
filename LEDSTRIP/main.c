@@ -49,7 +49,7 @@ int main(void) {
 	for (uint16_t i=0; i < length; i++) {
 		led[i].r=1; led[i].g=1; led[i].b=1;
 	}
-	ws2812_setleds(led, length);
+	ledstrip_setleds(led, length);
 	_delay_ms(1000);
 	
 	uint16_t move_delay = 25;
@@ -90,7 +90,7 @@ int main(void) {
 			led[rainbow_leds - 1].g = value.G;
 			led[rainbow_leds - 1].b = value.B;
 		}
-		ws2812_setleds(led, rainbow_leds);
+		ledstrip_setleds(led, rainbow_leds);
 		position++;
 		if (position == rainbow_leds) position = 0;
 		_delay_ms(move_delay);
@@ -99,10 +99,10 @@ int main(void) {
 		//led[1].r=0; led[1].g=0; led[1].b=8;
 		//
 		//for (uint16_t i = 0; i < position; i++)
-		//ws2812_send((uint8_t *)&led[0]);
+		//ledstrip_send((uint8_t *)&led[0]);
 		//
 		//for (uint16_t i = 0; i < (length - position); i++)
-		//ws2812_send((uint8_t *)&led[1]);
+		//ledstrip_send((uint8_t *)&led[1]);
 		//
 		//position+=direction;
 		//if ((position == length)||(position == 0)) direction =- direction;

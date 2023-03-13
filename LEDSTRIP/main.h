@@ -5,6 +5,7 @@
 #include <util/delay.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include "ws2812.h"
+
+#include "ledstrip.h"
 
 #endif /* MAIN_H_ */

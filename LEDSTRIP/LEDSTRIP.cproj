@@ -123,16 +123,16 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ledstrip.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="ledstrip.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="ws2812.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="ws2812.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
