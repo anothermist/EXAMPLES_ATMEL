@@ -1,7 +1,4 @@
 #include "ledstrip.h"
-#include <avr/interrupt.h>
-#include <avr/io.h>
-#include <util/delay.h>
 
 void inline ledstrip_send(uint8_t *data) {
 	ledstrip_sendarray_mask(data, 3, _BV(LED_DATA_PIN));
