@@ -46,7 +46,7 @@ void uartTransmitHex(uint8_t dataType, uint32_t data) { // Function to transmit 
 	uartTransmitString (dataString);
 }
 
-void uartTransmitString(uint8_t* string) { // Function to transmit a string in RAM
+void uartTransmitString(unsigned char* string) { // Function to transmit a string in RAM
 	while (*string)
 	uartTransmitByte(*string++);
 }
