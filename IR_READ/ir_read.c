@@ -1,0 +1,219 @@
+#include "ir_read.h"
+
+uint8_t repeatCount = 0;
+uint16_t code = 0;
+uint16_t time;
+uint8_t protocolLetter;
+
+void irrTimerInit() {
+	TIMER_INIT();
+	if (IR_ENABLE_PULLUP)
+	IR_PORT |= _BV(IR_PIN_NUM);
+}
+
+uint16_t irrDecode() {
+	time = TIMER_REG;
+	TIMER_REG = 0;
+
+	if (time > CONV(9000) && time < CONV(9800)) { // Between 9ms and 9.8ms => NEC protocol
+		protocolLetter = 'N';
+#ifdef ENABLED_PROTOCOL_NEC		
+		code = irrProtocolNEC(code);
+#endif 
+		} else if (time > CONV(800) && time < CONV(1200)) { // Between 0.8ms and 1.2ms => RC5 protocol
+		protocolLetter = 'R';
+#ifdef ENABLED_PROTOCOL_RC5
+		code = irrProtocolRC5(code);
+#endif 
+		} else if (time > CONV(2000) && time < CONV(2800)) { // Between 2ms and 2.8ms => SIRC protocol
+		protocolLetter = 'S';
+#ifdef ENABLED_PROTOCOL_SIRC
+		code = irrProtocolSIRC(code);
+#endif
+		} else {
+		protocolLetter = 'U';
+	}
+	uint16_t decoded = code;
+	code = 0;
+	return (decoded);
+}
+
+#ifdef ENABLED_PROTOCOL_NEC	
+uint16_t irrProtocolNEC(uint16_t code) {
+	uint8_t bitVal;
+	uint16_t time;
+	uint8_t i;
+	uint16_t invertedCode = 0;
+	static uint16_t lastCode = 0;
+
+	while (IR_HIGH);/*
+	if (TIMER_REG > CONV(5000))
+	return 0;*/
+
+	time = TIMER_REG;
+	TIMER_REG = 0;
+
+	PORTC ^= _BV(PINC5);
+	
+	if (time > CONV(4200)) { // 4200 us
+		repeatCount = 0; // regular button press
+		} else {
+		if (++repeatCount == NEC_REPEAT_RATE) { // hold button press send last keycode
+			repeatCount = 0;
+			return lastCode;
+		}
+		return 0;
+	}
+	
+	code = 0;
+	
+	for (i = 0; i < 32; i++) { // Read 32 data bits
+		while (IR_LOW);
+		/*	if (TIMER_REG > CONV(5000))
+		return 0;*/
+		while (IR_HIGH);/*
+		if (TIMER_REG > CONV(5000))
+		return 0;*/
+
+		time = TIMER_REG;
+		TIMER_REG = 0;
+		
+		if (time > CONV(1650)) { // 1650 us
+			bitVal = 1;
+			} else {
+			bitVal = 0;
+		}
+
+		PORTC ^= _BV(PINC5);
+		
+		if ((i < 8) || (i >= 16 && i < 24)) {
+			code = code << 1;
+			code |= bitVal;
+		}
+
+		if ((i >= 8 && i < 16) || (i >= 24 && i < 32)) {
+			invertedCode = invertedCode << 1;
+			invertedCode |= bitVal;
+		}
+	}
+
+	if (code != ~invertedCode)
+	return 0;
+
+	lastCode = code;
+	return code;
+}
+#endif
+
+#ifdef ENABLED_PROTOCOL_RC5
+uint16_t irrProtocolRC5(uint16_t code) {
+	uint8_t repeatBit;
+	uint8_t i;
+
+	static uint16_t lastCode = 0;
+	static uint8_t lastRepeatBit = 0;
+
+	uint8_t errorBit;
+
+	code = 0;
+
+	while (TIMER_REG < CONV(3160)); // 3160 us offset from the first pulse
+	TIMER_REG = 0;
+
+	repeatBit = IR_VAL; // Read "repeat" bit
+	PORTC ^= _BV(PINC5);
+
+	// Move 1760us to the first data bit
+	while (TIMER_REG < CONV(880));
+	TIMER_REG = 0;
+
+	for (i = 0; i < 11; i++) { // Read 12 data bits (5 address & 7 command)
+		code = code << 1;
+		PORTC ^= _BV(PINC5);
+		errorBit = IR_VAL;
+
+		//while (TIMER_REG < CONV(RC5_DELAY_0));
+		//TIMER_REG = 0;
+
+		// Read second half of bit, which has to be inverted
+		// so we check whether the code is ok
+
+		while (errorBit == IR_VAL)
+		if (TIMER_REG > CONV(1000))
+		return 0;
+
+		TIMER_REG = 0;
+		while (TIMER_REG < CONV(400));
+		TIMER_REG = 0;
+
+		PORTC ^= _BV(PINC5);
+		
+		if (IR_VAL)
+		code |= 0x0001;
+
+		if (IR_VAL && errorBit) // If the previous and current bit is the same - we have error code
+		return 0;
+		
+		while (TIMER_REG < CONV(800));
+		TIMER_REG = 0;
+	}
+
+	if (code == lastCode && repeatBit == lastRepeatBit) {
+		if (++repeatCount == RC5_REPEAT_RATE) {
+			repeatCount = 0;
+			return code;
+			} else {
+			return 0;
+		}
+	}
+
+	if (repeatBit != lastRepeatBit) {
+		repeatCount = 0;
+	}
+
+	lastCode = code;
+	lastRepeatBit = repeatBit;
+	return code;
+}
+#endif
+
+#ifdef ENABLED_PROTOCOL_SIRC
+uint16_t irrProtocolSIRC(uint16_t code) {
+	uint16_t time;
+	uint8_t i;
+	static uint16_t lastCode = 0;
+
+	code = 0;
+
+	for (i = 0; i < 12; i++) { // Read 32 data bits
+		while (IR_LOW)
+		if (TIMER_REG > CONV(2000))
+		return 0;
+		while (IR_HIGH)
+		if (TIMER_REG > CONV(2000))
+		return 0;
+
+		time = TIMER_REG;
+		TIMER_REG = 0;
+
+		if (time < CONV(400) || time > CONV(2000)) // error check - pulse length between 500-2000us
+		return 0;
+
+		code = code << 1;
+
+		if (time > CONV(1440)) // 1440 us
+		code |= 1;
+	}
+	
+	if (code == lastCode) {
+		if ((repeatCount++) == SIRC_REPEAT_RATE) {
+			repeatCount = 0;
+			return code;
+			} else {
+			return 0;
+		}
+	}
+	lastCode = code;
+	return code;
+}
+#endif
