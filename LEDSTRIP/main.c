@@ -4,7 +4,7 @@
 #define saturation 1.000  // 0.00 ~ 1.00
 #define brightness 0.025  // 0.00 ~ 1.00
 
-#define rainbow_leds 300  // 0.00 ~ 1.00
+#define rainbow_leds 300
 
 struct cRGB led[length];
 
