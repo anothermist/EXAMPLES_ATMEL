@@ -1,39 +1,49 @@
 #include "main.h"
 
-uint8_t brightness = 3;
-uint8_t saturation = 100;
-uint16_t position = 0;
+#define delay_ms 25
 
-struct cRGB  { uint8_t g; uint8_t r; uint8_t b; };
-struct cRGB led[LEDS];
+uint16_t chain = 600;
+uint16_t segment = 50;
+uint8_t reverse = 1;
+uint16_t saturation = 100;
+uint16_t brightness = 4;
+uint16_t offset = 0;
 
 RGB rgb;
+uint8_t palette[3][360];
 
 int main(void)
 {
 	led_init();
 	
-	for (uint16_t i = 0; i < 1000; i++) led_pixel(1, 1, 1);
-	led_reset();
+	for (uint16_t i = 0; i < chain; i++) led_pixel(1, 1, 1);
+	_delay_ms(500);
+	for (uint16_t i = 0; i < chain; i++) led_pixel(0, 0, 0);
 	
+	for (uint16_t i = 0; i < 360; i++) {
+		rgb = hsv_rgb(i, saturation, brightness);
+		palette[0][i] = rgb.r; palette[1][i] = rgb.g; palette[2][i] = rgb.b;
+	}
+
 	while (1)
 	{
-		rgb = hsv_rgb(position * (360 / (LEDS % 360)) , saturation, brightness);
-		
-		for (uint16_t i = 0; i < (LEDS - 1); i++) {
-			led[(LEDS - 1) - i].r = led[(LEDS - 2) - i].r;
-			led[(LEDS - 1) - i].g = led[(LEDS - 2) - i].g;
-			led[(LEDS - 1) - i].b = led[(LEDS - 2) - i].b;
+
+		if (reverse) {
+			for (uint16_t i = 0; i < chain; i++) {
+				uint16_t paletteIndex = ((360 / segment) * ((i + offset - 1) % segment));
+				led_pixel(palette[0][paletteIndex], palette[1][paletteIndex], palette[2][paletteIndex]);
+			}
+			offset--;
+			if (offset == 0) offset = segment;
 		}
-		led[0].r = rgb.r;
-		led[0].g = rgb.g;
-		led[0].b = rgb.b;
-		
-		for (uint16_t i = 0; i < LEDS; i++) led_pixel(led[i].r, led[i].g, led[i].b);
-		led_reset();
-		
-		position++;
-		if (position == LEDS) position = 0;
-		_delay_ms(25);
+		else {
+			for (uint16_t i = 0; i < chain; i++) {
+				uint16_t paletteIndex = 359 - ((360 / segment) * ((i + offset) % segment));
+				led_pixel(palette[0][paletteIndex], palette[1][paletteIndex], palette[2][paletteIndex]);
+			}
+			offset++;
+			if (offset == segment) offset = 0;
+		}
+		_delay_ms(delay_ms);
 	}
 }

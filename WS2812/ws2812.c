@@ -15,7 +15,7 @@ void led_reset() {
 	_delay_us(RES);
 }
 
-inline void sendBit(bool bitVal) {
+inline void sendBit(uint8_t bitVal) {
 	if (bitVal) {                                   // 0 bit
 		asm volatile (
 		"sbi %[port], %[bit] \n\t"                  // Set the output bit
@@ -32,7 +32,8 @@ inline void sendBit(bool bitVal) {
 		[onCycles]	"I" (NS_TO_CYCLES(T1H) - 2),    // 1-bit width less overhead  for the actual bit setting, note that this delay could be longer and everything would still work
 		[offCycles] "I" (NS_TO_CYCLES(T1L) - 2)     // Minimum interbit delay. Note that we probably don't need this at all since the loop overhead will be enough, but here for correctness
 		);
-		} else {                                    // 1 bit
+	}
+	else {                                    // 1 bit
 		asm volatile (
 		"sbi %[port], %[bit] \n\t"                  // Set the output bit
 		".rept %[onCycles] \n\t"                    // Now timing actually matters. The 0-bit must be long enough to be detected but not too long or it will be a 1-bit
@@ -62,15 +63,6 @@ void led_pixel(uint8_t r, uint8_t g, uint8_t b)  {
 	sendByte(g);
 	sendByte(r);
 	sendByte(b);
-}
-
-void led_color(uint8_t r, uint8_t g, uint8_t b) {
-	cli();
-	for(uint16_t i = 0; i < LEDS; i++) {
-		led_pixel(r, g, b);
-	}
-	sei();
-	led_reset();
 }
 
 RGB hsv_rgb (float H, float S, float V) {

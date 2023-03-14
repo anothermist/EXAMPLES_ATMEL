@@ -2,9 +2,7 @@
 #define WS2812_H_
 
 #include "main.h"
-#include <math.h>
 
-#define LEDS 300
 #define LED_PORT  PORTC
 #define LED_DDR   DDRC
 #define LED_PIN   0 
@@ -18,9 +16,8 @@
 typedef struct RGB { uint8_t r; uint8_t g; uint8_t b; } RGB;
 
 void led_init();
-void led_reset();
 void led_pixel(uint8_t r, uint8_t g, uint8_t b);
-void led_color(uint8_t r, uint8_t g, uint8_t b);
+void led_reset();
 RGB hsv_rgb (float H, float S, float V);
 
 #endif /* WS2812_H_ */
