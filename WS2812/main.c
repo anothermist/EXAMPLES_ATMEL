@@ -1,15 +1,13 @@
 #include "main.h"
 
-#define delay_ms 25
+#define delay_ms 0
 
 uint16_t chain = 600;
 uint16_t segment = 50;
 uint8_t reverse = 1;
-uint16_t saturation = 100;
-uint16_t brightness = 4;
+double saturation = 1.0;
+double brightness = 0.010;
 uint16_t offset = 0;
-
-RGB rgb;
 uint8_t palette[3][360];
 
 int main(void)
@@ -27,7 +25,6 @@ int main(void)
 
 	while (1)
 	{
-
 		if (reverse) {
 			for (uint16_t i = 0; i < chain; i++) {
 				uint16_t paletteIndex = ((360 / segment) * ((i + offset - 1) % segment));
@@ -44,6 +41,7 @@ int main(void)
 			offset++;
 			if (offset == segment) offset = 0;
 		}
+		led_reset();
 		_delay_ms(delay_ms);
 	}
 }

@@ -14,10 +14,11 @@
 #define RES 50  // WS2812 need 50 us, WS2813 needs 300 us reset time
 
 typedef struct RGB { uint8_t r; uint8_t g; uint8_t b; } RGB;
+RGB rgb;
 
 void led_init();
 void led_pixel(uint8_t r, uint8_t g, uint8_t b);
 void led_reset();
-RGB hsv_rgb (float H, float S, float V);
+RGB hsv_rgb(double H, double S, double V);
 
 #endif /* WS2812_H_ */

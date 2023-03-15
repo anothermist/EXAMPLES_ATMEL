@@ -33,7 +33,7 @@ inline void sendBit(uint8_t bitVal) {
 		[offCycles] "I" (NS_TO_CYCLES(T1L) - 2)     // Minimum interbit delay. Note that we probably don't need this at all since the loop overhead will be enough, but here for correctness
 		);
 	}
-	else {                                    // 1 bit
+	else {                                          // 1 bit
 		asm volatile (
 		"sbi %[port], %[bit] \n\t"                  // Set the output bit
 		".rept %[onCycles] \n\t"                    // Now timing actually matters. The 0-bit must be long enough to be detected but not too long or it will be a 1-bit
@@ -60,37 +60,37 @@ inline void sendByte(uint8_t byte) {
 }
 
 void led_pixel(uint8_t r, uint8_t g, uint8_t b)  {
-	sendByte(g);
-	sendByte(r);
-	sendByte(b);
+	sendByte(g); sendByte(r); sendByte(b);
 }
 
-RGB hsv_rgb (float H, float S, float V) {
-	float r = 0, g = 0, b = 0;
-	
-	float h = H / 360;
-	float s = S / 100;
-	float v = V / 100;
-	
-	int i = floor(h * 6);
-	float f = h * 6 - i;
-	float p = v * (1 - s);
-	float q = v * (1 - f * s);
-	float t = v * (1 - (1 - f) * s);
-	
-	switch (i % 6) {
-		case 0: r = v, g = t, b = p; break;
-		case 1: r = q, g = v, b = p; break;
-		case 2: r = p, g = v, b = t; break;
-		case 3: r = p, g = q, b = v; break;
-		case 4: r = t, g = p, b = v; break;
-		case 5: r = v, g = p, b = q; break;
+RGB hsv_rgb(double H, double S, double V) {
+	double r = 0, g = 0, b = 0;
+
+	if (S == 0) { r = V; g = V; b = V; }
+	else {
+		uint16_t i;
+		double f, p, q, t;
+
+		if (H == 360) H = 0;
+		else H = H / 60;
+
+		i = (uint16_t)trunc(H);
+		f = H - i;
+
+		p = V * (1.0 - S);
+		q = V * (1.0 - (S * f));
+		t = V * (1.0 - (S * (1.0 - f)));
+
+		switch (i) {
+			case 0:  r = V; g = t; b = p; break;
+			case 1:  r = q; g = V; b = p; break;
+			case 2:  r = p; g = V; b = t; break;
+			case 3:  r = p; g = q; b = V; break;
+			case 4:  r = t; g = p; b = V; break;
+			default: r = V; g = p; b = q; break;
+		}
+
 	}
-	
-	RGB rgb;
-	rgb.r = r * 255;
-	rgb.g = g * 255;
-	rgb.b = b * 255;
-	
+	rgb.r = r * 255; rgb.g = g * 255; rgb.b = b * 255;
 	return rgb;
 }
