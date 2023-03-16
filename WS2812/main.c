@@ -1,12 +1,12 @@
 #include "main.h"
 
-#define delay_ms 0
+#define delay_ms 10
 
 uint16_t chain = 600;
-uint16_t segment = 50;
+uint16_t segment = 25;
 uint8_t reverse = 1;
 double saturation = 1.0;
-double brightness = 0.010;
+double brightness = 0.1;
 uint16_t offset = 0;
 uint8_t palette[3][360];
 
