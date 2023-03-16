@@ -1,61 +1,75 @@
 #include "uart.h"
 
-void uartInit() {
-	uint16_t ubrr = ((F_CPU/16)/(UART_BAUD+1));
-	UBRR0H = (uint8_t)(ubrr>>8);
-	UBRR0L = (uint8_t)ubrr;
-	UCSR0B=(1<<RXEN0)|(1<<TXEN0)|(1<<RXCIE0);
-	UCSR0C=(1<<UMSEL01)|(1<<UCSZ00)|(1<<UCSZ01)|(1<<USBS0);
-	uartTransmitString_F (PSTR("OK"));
-	uartNewLine();
-}
+volatile static unsigned char rx_buffer[RX_BUFFER_SIZE] = {0};
+volatile static unsigned int rx_count = 0;
+volatile static unsigned char uart_tx_busy = 1;
 
-uint8_t uartReceiveByte() { // Function to receive a single byte
-	uint8_t data/*, status*/;
+ISR(USART_RX_vect){
 	
-	while(!(UCSR0A & (1<<RXC0))); 	// Wait for incomming data
+	volatile static unsigned int rx_write_pos = 0;
 	
-/*	status = UCSR0A; */
-	data = UDR0;
-	
-	return(data);
-}
-
-void uartTransmitByte(uint8_t data) { //	Function to transmit a single byte
-	while (!(UCSR0A & (1<<UDRE0)));   /* Wait for empty transmit buffer */
-	UDR0 = data; 			        /* Start transmition */
-}
-
-void uartTransmitHex(uint8_t dataType, uint32_t data) { // Function to transmit hex format data. first argument indicates type: CHAR, INT or LONG. Second argument is the data to be displayed
-	uint8_t count, i, temp;
-	uint8_t dataString[] = "0x        ";
-
-	if (dataType == CHAR) count = 2;
-	if (dataType == INT) count = 4;
-	if (dataType == LONG) count = 8;
-
-	for(i=count; i>0; i--)
-	{
-		temp = data % 16;
-		if((temp>=0) && (temp<10)) dataString [i+1] = temp + 0x30;
-		else dataString [i+1] = (temp - 10) + 0x41;
-
-		data = data/16;
+	rx_buffer[rx_write_pos] = UDR0;
+	rx_count++;
+	rx_write_pos++;
+	if(rx_write_pos >= RX_BUFFER_SIZE) {
+		rx_write_pos = 0;
 	}
-
-	uartTransmitString (dataString);
 }
 
-void uartTransmitString(unsigned char* string) { // Function to transmit a string in RAM
-	while (*string)
-	uartTransmitByte(*string++);
+ISR(USART_TX_vect) {
+	uart_tx_busy = 1;
 }
 
-void uartTransmitString_F(const char* string) { // Function to transmit a string in Flash
-	while (pgm_read_byte(&(*string)))
-	uartTransmitByte(pgm_read_byte(&(*string++)));
+void uart_init(unsigned long baud, unsigned char high_speed) {
+	
+	unsigned char speed = 16;
+	if(high_speed != 0) {
+		speed = 8;
+		UCSR0A |= 1 << U2X0;
+	}
+	
+	baud = (F_CPU/(speed * baud)) - 1;
+	
+	UBRR0H = (baud & 0x0F00) >> 8;
+	UBRR0L = (baud & 0x00FF);
+	UCSR0B |= (1 << TXEN0) | (1 << RXEN0) | (1 << TXCIE0) | (1 << RXCIE0);
 }
 
-void uartNewLine() {
-	TX_NEWLINE;
+void uart_send_byte(unsigned char c) {
+	while(uart_tx_busy == 0);
+	uart_tx_busy = 0;
+	UDR0 = c;
+}
+
+void uart_send_array(char *c, unsigned int len) {
+	for(unsigned int i = 0; i < len; i++) {
+		uart_send_byte(c[i]);
+	}
+}
+
+void uart_send_string(char *c) {
+	unsigned int i = 0;
+	do {
+		uart_send_byte(c[i]);
+		i++;
+		
+	} while(c[i] != '\0');
+	uart_send_byte(c[i]);
+}
+
+char uart_read(void){
+	static unsigned int rx_read_pos = 0;
+	unsigned char data = 0;
+	
+	data = rx_buffer[rx_read_pos];
+	rx_read_pos++;
+	rx_count--;
+	if(rx_read_pos >= RX_BUFFER_SIZE) {
+		rx_read_pos = 0;
+	}
+	return data;
+}
+
+unsigned int uart_read_count(void) {
+	return rx_count;
 }

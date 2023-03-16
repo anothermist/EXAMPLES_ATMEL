@@ -4,11 +4,11 @@
 #include "main.h"
 
 #define ENABLED_PROTOCOL_NEC
-//#define ENABLED_PROTOCOL_RC5
-//#define ENABLED_PROTOCOL_SIRC
+#define ENABLED_PROTOCOL_RC5
+#define ENABLED_PROTOCOL_SIRC
 
 #define IR_PIN PINB
-#define IR_PIN_NUM PINB2
+#define IR_PIN_NUM PINB5
 #define IR_PORT PORTB
 
 #define IR_ENABLE_PULLUP 1
@@ -39,10 +39,10 @@
 #define IR_VAL (IR_PIN & _BV(IR_PIN_NUM))
 
 void irrTimerInit();
-uint16_t irrDecode();
+unsigned int irrDecode();
 
-uint16_t irrProtocolNEC(uint16_t code);
-uint16_t irrProtocolRC5(uint16_t code);
-uint16_t irrProtocolSIRC(uint16_t code);
+unsigned int irrProtocolNEC(unsigned int code);
+unsigned int irrProtocolRC5(unsigned int code);
+unsigned int irrProtocolSIRC(unsigned int code);
 
 #endif /* IR_READ_H_ */

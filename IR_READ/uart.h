@@ -3,18 +3,13 @@
 
 #include "main.h"
 
-#define CHAR 0
-#define INT  1
-#define LONG 2
+#define RX_BUFFER_SIZE 128
 
-#define TX_NEWLINE {uartTransmitByte(0x0d); uartTransmitByte(0x0a);}
-
-void uartInit();
-unsigned char uartReceiveByte();
-void uartTransmitByte(unsigned char);
-void uartTransmitString(unsigned char*);
-void uartTransmitString_F(const char*);
-void uartTransmitHex(unsigned char dataType, uint32_t data);
-void uartNewLine();
+void uart_init(unsigned long baud, unsigned char high_speed);
+void uart_send_byte(unsigned char c);
+void uart_send_array(char *c, unsigned int len);
+void uart_send_string(char *c);
+char uart_read(void);
+unsigned int uart_read_count(void);
 
 #endif /* UART_H_ */

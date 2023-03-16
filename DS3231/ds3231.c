@@ -1,91 +1,39 @@
 #include "ds3231.h"
 #include "twi.h"
 
-uint8_t rtcBuffer[19], rtcBufferSet[17];
+unsigned char rtcBuffer[19], rtcBufferSet[17];
 
-unsigned int decToBcd(unsigned int val) {
-	return ((val / 10 * 16) + (val % 10));
-}
-
-unsigned int bcdToDec(unsigned int val) {
-	return ((val / 16 * 10) + (val % 16));
-}
+unsigned int decToBcd(unsigned int val) { return ((val / 10 * 16) + (val % 10)); }
+unsigned int bcdToDec(unsigned int val) { return ((val / 16 * 10) + (val % 16)); }
 
 void DS3231_Update(void) {
 	TWI_SendByteByADDR(0, DS3231_ADDRESS);
 	TWI_StartCondition();
 	TWI_SendByte(0b11010001);
 	
-	for (uint8_t i = 0; i < 17; i++) rtcBuffer[i] = TWI_ReadByte();
+	for (unsigned char i = 0; i < 17; i++) rtcBuffer[i] = TWI_ReadByte();
 	rtcBuffer[18] = TWI_ReadLastByte();
 	TWI_StopCondition();
 	
-	for (uint8_t i = 0; i < 16; i++) rtcBufferSet[i+1] = rtcBuffer[i];
+	for (unsigned char i = 0; i < 16; i++) rtcBufferSet[i+1] = rtcBuffer[i];
 }
 
-uint8_t DS3231_getSec(void) {
-	return bcdToDec(rtcBuffer[0]);
-}
-
-uint8_t DS3231_getMin(void) {
-	return bcdToDec(rtcBuffer[1]);
-}
-
-uint8_t DS3231_getHrs(void) {
-	return bcdToDec(rtcBuffer[2]);
-}
-
-uint8_t DS3231_getWDay(void) {
-	return bcdToDec(rtcBuffer[3]);
-}
-
-uint8_t DS3231_getDate(void) {
-	return bcdToDec(rtcBuffer[4]);
-}
-
-uint8_t DS3231_getMonth(void) {
-	return bcdToDec(rtcBuffer[5]);
-}
-
-uint8_t DS3231_getYear(void) {
-	return bcdToDec(rtcBuffer[6]);
-}
-
-uint8_t DS3231_getAlarm1Sec(void) {
-	return bcdToDec(rtcBuffer[7]);
-}
-
-uint8_t DS3231_getAlarm1Min(void) {
-	return bcdToDec(rtcBuffer[8]);
-}
-
-uint8_t DS3231_getAlarm1Hour(void) {
-	return bcdToDec(rtcBuffer[9]);
-}
-
-uint8_t DS3231_getAlarm1WeekDay(void) {
-	return bcdToDec(rtcBuffer[10]);
-}
-
-uint8_t DS3231_getAlarm1Date(void) {
-	return bcdToDec(rtcBuffer[11]);
-}
-
-uint8_t DS3231_getAlarm2Min(void) {
-	return bcdToDec(rtcBuffer[12]);
-}
-
-uint8_t DS3231_getAlarm2Hour(void) {
-	return bcdToDec(rtcBuffer[13]);
-}
-
-uint8_t DS3231_getAlarm2WeekDay(void) {
-	return bcdToDec(rtcBuffer[14]);
-}
-
-uint8_t DS3231_getAlarm2Date(void) {
-	return bcdToDec(rtcBuffer[15]);
-}
+unsigned char DS3231_getSec(void)           { return bcdToDec(rtcBuffer[0]); }
+unsigned char DS3231_getMin(void)           { return bcdToDec(rtcBuffer[1]); }
+unsigned char DS3231_getHrs(void)           { return bcdToDec(rtcBuffer[2]); }
+unsigned char DS3231_getWDay(void)          { return bcdToDec(rtcBuffer[3]); }
+unsigned char DS3231_getDate(void)          { return bcdToDec(rtcBuffer[4]); }
+unsigned char DS3231_getMonth(void)         { return bcdToDec(rtcBuffer[5]); }
+unsigned char DS3231_getYear(void)          { return bcdToDec(rtcBuffer[6]); }
+unsigned char DS3231_getAlarm1Sec(void)     { return bcdToDec(rtcBuffer[7]); }
+unsigned char DS3231_getAlarm1Min(void)     { return bcdToDec(rtcBuffer[8]); }
+unsigned char DS3231_getAlarm1Hour(void)    { return bcdToDec(rtcBuffer[9]); }
+unsigned char DS3231_getAlarm1WeekDay(void) { return bcdToDec(rtcBuffer[10]); }
+unsigned char DS3231_getAlarm1Date(void)    { return bcdToDec(rtcBuffer[11]); }
+unsigned char DS3231_getAlarm2Min(void)     { return bcdToDec(rtcBuffer[12]); }
+unsigned char DS3231_getAlarm2Hour(void)    { return bcdToDec(rtcBuffer[13]); }
+unsigned char DS3231_getAlarm2WeekDay(void) { return bcdToDec(rtcBuffer[14]); }
+unsigned char DS3231_getAlarm2Date(void)    { return bcdToDec(rtcBuffer[15]); }
 
 //double DS3231_getTemp(void) {
 //unsigned int tempMSB = rtcBuffer[17];
@@ -99,7 +47,7 @@ uint8_t DS3231_getAlarm2Date(void) {
 //return t;
 //}
 
-void DS3231_setSec(uint8_t value) {
+void DS3231_setSec(unsigned char value) {
 	TWI_StartCondition();
 	TWI_SendByte(DS3231_ADDRESS);
 	TWI_SendByte(0);
@@ -107,7 +55,7 @@ void DS3231_setSec(uint8_t value) {
 	TWI_StopCondition();
 }
 
-void DS3231_setMin(uint8_t value) {
+void DS3231_setMin(unsigned char value) {
 	DS3231_Update();
 	TWI_StartCondition();
 	TWI_SendByte(DS3231_ADDRESS);
@@ -117,7 +65,7 @@ void DS3231_setMin(uint8_t value) {
 	TWI_StopCondition();
 }
 
-void DS3231_setHrs(uint8_t value) {
+void DS3231_setHrs(unsigned char value) {
 	DS3231_Update();
 	TWI_StartCondition();
 	TWI_SendByte(DS3231_ADDRESS);
@@ -128,132 +76,132 @@ void DS3231_setHrs(uint8_t value) {
 	TWI_StopCondition();
 }
 
-void DS3231_setWDay(uint8_t value) {
+void DS3231_setWDay(unsigned char value) {
 	DS3231_Update();
 	TWI_StartCondition();
 	TWI_SendByte(DS3231_ADDRESS);
 	TWI_SendByte(0);
-	for (uint8_t i = 0; i < 3; i++) TWI_SendByte(rtcBuffer[i]);
+	for (unsigned char i = 0; i < 3; i++) TWI_SendByte(rtcBuffer[i]);
 	TWI_SendByte(decToBcd(value));
 	TWI_StopCondition();
 }
 
-void DS3231_setDate(uint8_t value) {
+void DS3231_setDate(unsigned char value) {
 	DS3231_Update();
 	TWI_StartCondition();
 	TWI_SendByte(DS3231_ADDRESS);
 	TWI_SendByte(0);
-	for (uint8_t i = 0; i < 4; i++) TWI_SendByte(rtcBuffer[i]);
+	for (unsigned char i = 0; i < 4; i++) TWI_SendByte(rtcBuffer[i]);
 	TWI_SendByte(decToBcd(value));
 	TWI_StopCondition();
 }
 
-void DS3231_setMonth(uint8_t value) {
+void DS3231_setMonth(unsigned char value) {
 	DS3231_Update();
 	TWI_StartCondition();
 	TWI_SendByte(DS3231_ADDRESS);
 	TWI_SendByte(0);
-	for (uint8_t i = 0; i < 5; i++) TWI_SendByte(rtcBuffer[i]);
+	for (unsigned char i = 0; i < 5; i++) TWI_SendByte(rtcBuffer[i]);
 	TWI_SendByte(decToBcd(value));
 	TWI_StopCondition();
 }
 
-void DS3231_setYear(uint8_t value) {
+void DS3231_setYear(unsigned char value) {
 	DS3231_Update();
 	TWI_StartCondition();
 	TWI_SendByte(DS3231_ADDRESS);
 	TWI_SendByte(0);
-	for (uint8_t i = 0; i < 6; i++) TWI_SendByte(rtcBuffer[i]);
+	for (unsigned char i = 0; i < 6; i++) TWI_SendByte(rtcBuffer[i]);
 	TWI_SendByte(decToBcd(value));
 	TWI_StopCondition();
 }
 
-void DS3231_setAlarm1Sec(uint8_t value) {
+void DS3231_setAlarm1Sec(unsigned char value) {
 	DS3231_Update();
 	TWI_StartCondition();
 	TWI_SendByte(DS3231_ADDRESS);
 	TWI_SendByte(0);
-	for (uint8_t i = 0; i < 7; i++) TWI_SendByte(rtcBuffer[i]);
+	for (unsigned char i = 0; i < 7; i++) TWI_SendByte(rtcBuffer[i]);
 	TWI_SendByte(decToBcd(value));
 	TWI_StopCondition();
 }
 
-void DS3231_setAlarm1Min(uint8_t value) {
+void DS3231_setAlarm1Min(unsigned char value) {
 	DS3231_Update();
 	TWI_StartCondition();
 	TWI_SendByte(DS3231_ADDRESS);
 	TWI_SendByte(0);
-	for (uint8_t i = 0; i < 8; i++) TWI_SendByte(rtcBuffer[i]);
+	for (unsigned char i = 0; i < 8; i++) TWI_SendByte(rtcBuffer[i]);
 	TWI_SendByte(decToBcd(value));
 	TWI_StopCondition();
 }
 
-void DS3231_setAlarm1Hour(uint8_t value) {
+void DS3231_setAlarm1Hour(unsigned char value) {
 	DS3231_Update();
 	TWI_StartCondition();
 	TWI_SendByte(DS3231_ADDRESS);
 	TWI_SendByte(0);
-	for (uint8_t i = 0; i < 9; i++) TWI_SendByte(rtcBuffer[i]);
+	for (unsigned char i = 0; i < 9; i++) TWI_SendByte(rtcBuffer[i]);
 	TWI_SendByte(decToBcd(value));
 	TWI_StopCondition();
 }
 
-void DS3231_setAlarm1Day(uint8_t value) {
+void DS3231_setAlarm1Day(unsigned char value) {
 	DS3231_Update();
 	TWI_StartCondition();
 	TWI_SendByte(DS3231_ADDRESS);
 	TWI_SendByte(0);
-	for (uint8_t i = 0; i < 10; i++) TWI_SendByte(rtcBuffer[i]);
+	for (unsigned char i = 0; i < 10; i++) TWI_SendByte(rtcBuffer[i]);
 	TWI_SendByte(decToBcd(value));
 	TWI_StopCondition();
 }
 
-void DS3231_setAlarm1Date(uint8_t value) {
+void DS3231_setAlarm1Date(unsigned char value) {
 	DS3231_Update();
 	TWI_StartCondition();
 	TWI_SendByte(DS3231_ADDRESS);
 	TWI_SendByte(0);
-	for (uint8_t i = 0; i < 11; i++) TWI_SendByte(rtcBuffer[i]);
+	for (unsigned char i = 0; i < 11; i++) TWI_SendByte(rtcBuffer[i]);
 	TWI_SendByte(decToBcd(value));
 	TWI_StopCondition();
 }
 
-void DS3231_setAlarm2Min(uint8_t value) {
+void DS3231_setAlarm2Min(unsigned char value) {
 	DS3231_Update();
 	TWI_StartCondition();
 	TWI_SendByte(DS3231_ADDRESS);
 	TWI_SendByte(0);
-	for (uint8_t i = 0; i < 12; i++) TWI_SendByte(rtcBuffer[i]);
+	for (unsigned char i = 0; i < 12; i++) TWI_SendByte(rtcBuffer[i]);
 	TWI_SendByte(decToBcd(value));
 	TWI_StopCondition();
 }
 
-void DS3231_setAlarm2Hour(uint8_t value) {
+void DS3231_setAlarm2Hour(unsigned char value) {
 	DS3231_Update();
 	TWI_StartCondition();
 	TWI_SendByte(DS3231_ADDRESS);
 	TWI_SendByte(0);
-	for (uint8_t i = 0; i < 13; i++) TWI_SendByte(rtcBuffer[i]);
+	for (unsigned char i = 0; i < 13; i++) TWI_SendByte(rtcBuffer[i]);
 	TWI_SendByte(decToBcd(value));
 	TWI_StopCondition();
 }
 
-void DS3231_setAlarm2Day(uint8_t value) {
+void DS3231_setAlarm2Day(unsigned char value) {
 	DS3231_Update();
 	TWI_StartCondition();
 	TWI_SendByte(DS3231_ADDRESS);
 	TWI_SendByte(0);
-	for (uint8_t i = 0; i < 14; i++) TWI_SendByte(rtcBuffer[i]);
+	for (unsigned char i = 0; i < 14; i++) TWI_SendByte(rtcBuffer[i]);
 	TWI_SendByte(decToBcd(value));
 	TWI_StopCondition();
 }
 
-void DS3231_setAlarm2Date(uint8_t value) {
+void DS3231_setAlarm2Date(unsigned char value) {
 	DS3231_Update();
 	TWI_StartCondition();
 	TWI_SendByte(DS3231_ADDRESS);
 	TWI_SendByte(0);
-	for (uint8_t i = 0; i < 15; i++) TWI_SendByte(rtcBuffer[i]);
+	for (unsigned char i = 0; i < 15; i++) TWI_SendByte(rtcBuffer[i]);
 	TWI_SendByte(decToBcd(value));
 	TWI_StopCondition();
 }

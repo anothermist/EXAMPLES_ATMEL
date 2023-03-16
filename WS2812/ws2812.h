@@ -13,11 +13,11 @@
 #define T0L 250 // 250 - 800 - 900   // Width of a 0 bit in ns
 #define RES 50  // WS2812 need 50 us, WS2813 needs 300 us reset time
 
-typedef struct RGB { uint8_t r; uint8_t g; uint8_t b; } RGB;
+typedef struct RGB { unsigned char r; unsigned char g; unsigned char b; } RGB;
 RGB rgb;
 
 void led_init();
-void led_pixel(uint8_t r, uint8_t g, uint8_t b);
+void led_pixel(unsigned char r, unsigned char g, unsigned char b);
 void led_reset();
 RGB hsv_rgb(double H, double S, double V);
 

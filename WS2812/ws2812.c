@@ -15,7 +15,7 @@ void led_reset() {
 	_delay_us(RES);
 }
 
-inline void sendBit(uint8_t bitVal) {
+inline void sendBit(unsigned char bitVal) {
 	if (bitVal) {                                   // 0 bit
 		asm volatile (
 		"sbi %[port], %[bit] \n\t"                  // Set the output bit
@@ -52,14 +52,14 @@ inline void sendBit(uint8_t bitVal) {
 	}
 }
 
-inline void sendByte(uint8_t byte) {
-	for(uint8_t bit = 0 ; bit < 8 ; bit++) {
+inline void sendByte(unsigned char byte) {
+	for(unsigned char bit = 0 ; bit < 8 ; bit++) {
 		sendBit(bitRead(byte, 7));
 		byte <<= 1;
 	}
 }
 
-void led_pixel(uint8_t r, uint8_t g, uint8_t b)  {
+void led_pixel(unsigned char r, unsigned char g, unsigned char b)  {
 	sendByte(g); sendByte(r); sendByte(b);
 }
 
@@ -68,13 +68,13 @@ RGB hsv_rgb(double H, double S, double V) {
 
 	if (S == 0) { r = V; g = V; b = V; }
 	else {
-		uint16_t i;
+		unsigned int i;
 		double f, p, q, t;
 
 		if (H == 360) H = 0;
 		else H = H / 60;
 
-		i = (uint16_t)trunc(H);
+		i = (unsigned int)trunc(H);
 		f = H - i;
 
 		p = V * (1.0 - S);

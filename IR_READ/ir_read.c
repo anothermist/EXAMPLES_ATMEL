@@ -1,9 +1,9 @@
 #include "ir_read.h"
 
-uint8_t repeatCount = 0;
-uint16_t code = 0;
-uint16_t time;
-uint8_t protocolLetter;
+unsigned char repeatCount = 0;
+unsigned int code = 0;
+unsigned int time;
+unsigned char protocolLetter;
 
 void irrTimerInit() {
 	TIMER_INIT();
@@ -11,7 +11,7 @@ void irrTimerInit() {
 	IR_PORT |= _BV(IR_PIN_NUM);
 }
 
-uint16_t irrDecode() {
+unsigned int irrDecode() {
 	time = TIMER_REG;
 	TIMER_REG = 0;
 
@@ -33,18 +33,18 @@ uint16_t irrDecode() {
 		} else {
 		protocolLetter = 'U';
 	}
-	uint16_t decoded = code;
+	unsigned int decoded = code;
 	code = 0;
 	return (decoded);
 }
 
 #ifdef ENABLED_PROTOCOL_NEC	
-uint16_t irrProtocolNEC(uint16_t code) {
-	uint8_t bitVal;
-	uint16_t time;
-	uint8_t i;
-	uint16_t invertedCode = 0;
-	static uint16_t lastCode = 0;
+unsigned int irrProtocolNEC(unsigned int code) {
+	unsigned char bitVal;
+	unsigned int time;
+	unsigned char i;
+	unsigned int invertedCode = 0;
+	static unsigned int lastCode = 0;
 
 	while (IR_HIGH);/*
 	if (TIMER_REG > CONV(5000))
@@ -106,14 +106,14 @@ uint16_t irrProtocolNEC(uint16_t code) {
 #endif
 
 #ifdef ENABLED_PROTOCOL_RC5
-uint16_t irrProtocolRC5(uint16_t code) {
-	uint8_t repeatBit;
-	uint8_t i;
+unsigned int irrProtocolRC5(unsigned int code) {
+	unsigned char repeatBit;
+	unsigned char i;
 
-	static uint16_t lastCode = 0;
-	static uint8_t lastRepeatBit = 0;
+	static unsigned int lastCode = 0;
+	static unsigned char lastRepeatBit = 0;
 
-	uint8_t errorBit;
+	unsigned char errorBit;
 
 	code = 0;
 
@@ -178,10 +178,10 @@ uint16_t irrProtocolRC5(uint16_t code) {
 #endif
 
 #ifdef ENABLED_PROTOCOL_SIRC
-uint16_t irrProtocolSIRC(uint16_t code) {
-	uint16_t time;
-	uint8_t i;
-	static uint16_t lastCode = 0;
+unsigned int irrProtocolSIRC(unsigned int code) {
+	unsigned int time;
+	unsigned char i;
+	static unsigned int lastCode = 0;
 
 	code = 0;
 

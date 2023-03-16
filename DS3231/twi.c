@@ -20,7 +20,7 @@ void TWI_SendByte(unsigned char c) {
 	while (!(TWCR & (1<<TWINT)));
 }
 
-void TWI_SendByteByADDR(unsigned char c,unsigned char addr) {
+void TWI_SendByteByADDR(unsigned char c, unsigned char addr) {
 	TWI_StartCondition();
 	TWI_SendByte(addr);
 	TWI_SendByte(c);

@@ -2,9 +2,9 @@
 
 int main(void)
 {
-	const uint8_t start[] = "UART OK \n\r";
-	uint8_t data = 'A';
-	uint8_t counter = 0x10; //0b00010000
+	char start[] = "UART OK \n\r";
+	char data = 'A';
+	unsigned char counter = 0x10; //0b00010000
 	
 	DDRD |= 0xF0; //0b11110000
 	uart_init(9600, 0);

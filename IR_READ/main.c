@@ -1,22 +1,34 @@
 #include "main.h"
 
 int main(void) {
+
+	DDRD |= 0xF0; //0b11110000
+	uart_init(9600, 0);
+	sei();
+	
+	char start[] = "UART OK \n\r";
+	
+	uart_send_string(start);
 	DDRD = 0xFF; PORTD = 0x00;
+	
 	irrTimerInit();
-	uartInit();
 	
 	while (1) {
-			
+		
 		if (IR_HIGH) {
 			
-			uint16_t irrValueNow = irrDecode();
+			unsigned int irrValueNow = irrDecode();
 			
 			if (irrValueNow) {
-				uartTransmitHex(0, irrValueNow);
-				uartNewLine();
+				//uartTransmitHex(0, irrValueNow);
+				//uartNewLine();
 				
-				char code_string[11];
-				snprintf(code_string, 11, "CODE: 0x%02X ", irrValueNow);
+				//sprintf(temp, "%x", readingreg[0]);
+				//uart_send_string(irrValueNow);
+				
+				char code_string[16];
+				snprintf(code_string, 16, "CODE: 0x%02X \n\r", irrValueNow);
+				uart_send_string(code_string);
 			}
 		}
 	}
