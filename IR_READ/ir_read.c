@@ -17,19 +17,19 @@ unsigned int irrDecode() {
 
 	if (time > CONV(9000) && time < CONV(9800)) { // Between 9ms and 9.8ms => NEC protocol
 		protocolLetter = 'N';
-#ifdef ENABLED_PROTOCOL_NEC		
+		#ifdef ENABLED_PROTOCOL_NEC
 		code = irrProtocolNEC(code);
-#endif 
+		#endif
 		} else if (time > CONV(800) && time < CONV(1200)) { // Between 0.8ms and 1.2ms => RC5 protocol
 		protocolLetter = 'R';
-#ifdef ENABLED_PROTOCOL_RC5
+		#ifdef ENABLED_PROTOCOL_RC5
 		code = irrProtocolRC5(code);
-#endif 
+		#endif
 		} else if (time > CONV(2000) && time < CONV(2800)) { // Between 2ms and 2.8ms => SIRC protocol
 		protocolLetter = 'S';
-#ifdef ENABLED_PROTOCOL_SIRC
+		#ifdef ENABLED_PROTOCOL_SIRC
 		code = irrProtocolSIRC(code);
-#endif
+		#endif
 		} else {
 		protocolLetter = 'U';
 	}
@@ -38,7 +38,7 @@ unsigned int irrDecode() {
 	return (decoded);
 }
 
-#ifdef ENABLED_PROTOCOL_NEC	
+#ifdef ENABLED_PROTOCOL_NEC
 unsigned int irrProtocolNEC(unsigned int code) {
 	unsigned char bitVal;
 	unsigned int time;

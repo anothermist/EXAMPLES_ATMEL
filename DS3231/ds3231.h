@@ -25,7 +25,7 @@ unsigned char DS3231_getAlarm2Min(void);
 unsigned char DS3231_getAlarm2Hour(void);
 unsigned char DS3231_getAlarm2WeekDay(void);
 unsigned char DS3231_getAlarm2Date(void);
-//double DS3231_getTemp(void);
+double DS3231_getTemp(void);
 void DS3231_setSec(unsigned char value);
 void DS3231_setMin(unsigned char value);
 void DS3231_setHrs(unsigned char value);
@@ -42,7 +42,7 @@ void DS3231_setAlarm2Min(unsigned char value);
 void DS3231_setAlarm2Hour(unsigned char value);
 void DS3231_setAlarm2Day(unsigned char value);
 void DS3231_setAlarm2Date(unsigned char value);
-//unsigned long DS3231_getUnix(unsigned long zoneCorrection);
-//float DS3231_getMoonDay(void);
+unsigned long DS3231_getUnix(unsigned long zoneCorrection);
+float DS3231_getMoonDay(void);
 
 #endif /* INC_DS3231_H_ */

@@ -14,14 +14,14 @@ int main(void)
 	while (1)
 	{
 		
-		if(uart_read_count() > 0) {
+		if (uart_read_count() > 0) {
 			data = uart_read();
 			uart_send_byte(data);
 
 			PORTD &= 0x0F; //0b00001111
-			PORTD |= counter; //
+			PORTD |= counter;
 			
-			if(counter >= 0x80) counter = 0x10;
+			if (counter >= 0x80) counter = 0x10;
 			else counter *= 2;
 		}
 

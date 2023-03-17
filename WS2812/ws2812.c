@@ -53,7 +53,7 @@ inline void sendBit(unsigned char bitVal) {
 }
 
 inline void sendByte(unsigned char byte) {
-	for(unsigned char bit = 0 ; bit < 8 ; bit++) {
+	for (unsigned char bit = 0 ; bit < 8 ; bit++) {
 		sendBit(bitRead(byte, 7));
 		byte <<= 1;
 	}

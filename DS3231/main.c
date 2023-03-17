@@ -1,12 +1,9 @@
 #include "main.h"
 
-unsigned char rtc_Sec, rtc_Min, rtc_Hrs, rtc_WDay, rtc_Date, rtc_Month, rtc_Year,
-last_Sec;
+unsigned char rtc_Sec, rtc_Min, rtc_Hrs, rtc_WDay, rtc_Date, rtc_Month, rtc_Year, last_Sec;
 
 int main(void) {
 	char start[] = "UART OK \n\r";
-	//uint8_t data = 'A';
-	//uint8_t counter = 0x10; //0b00010000
 	
 	DDRD |= 0xF0; //0b11110000
 	uart_init(9600, 1);

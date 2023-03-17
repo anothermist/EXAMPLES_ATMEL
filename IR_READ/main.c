@@ -20,12 +20,6 @@ int main(void) {
 			unsigned int irrValueNow = irrDecode();
 			
 			if (irrValueNow) {
-				//uartTransmitHex(0, irrValueNow);
-				//uartNewLine();
-				
-				//sprintf(temp, "%x", readingreg[0]);
-				//uart_send_string(irrValueNow);
-				
 				char code_string[16];
 				snprintf(code_string, 16, "CODE: 0x%02X \n\r", irrValueNow);
 				uart_send_string(code_string);

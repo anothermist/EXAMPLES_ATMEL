@@ -35,17 +35,17 @@ unsigned char DS3231_getAlarm2Hour(void)    { return bcdToDec(rtcBuffer[13]); }
 unsigned char DS3231_getAlarm2WeekDay(void) { return bcdToDec(rtcBuffer[14]); }
 unsigned char DS3231_getAlarm2Date(void)    { return bcdToDec(rtcBuffer[15]); }
 
-//double DS3231_getTemp(void) {
-//unsigned int tempMSB = rtcBuffer[17];
-//unsigned int tempLSB = rtcBuffer[18];
-//double t = 0.0;
-//tempLSB >>= 6;
-//tempLSB &= 0x03;
-//t = ((double) tempLSB);
-//t *= 0.25;
-//t += tempMSB;
-//return t;
-//}
+double DS3231_getTemp(void) {
+	unsigned int tempMSB = rtcBuffer[17];
+	unsigned int tempLSB = rtcBuffer[18];
+	double t = 0.0;
+	tempLSB >>= 6;
+	tempLSB &= 0x03;
+	t = ((double) tempLSB);
+	t *= 0.25;
+	t += tempMSB;
+	return t;
+}
 
 void DS3231_setSec(unsigned char value) {
 	TWI_StartCondition();
@@ -206,50 +206,50 @@ void DS3231_setAlarm2Date(unsigned char value) {
 	TWI_StopCondition();
 }
 
-//unsigned long DS3231_getUnix(unsigned long zoneCorrection) {
-//unsigned int timeYear = DS3231_getYear();
-//unsigned int timeMonth = DS3231_getMonth();
-//unsigned int timeDate = DS3231_getDate();
-//unsigned int timeHour = DS3231_getHrs();
-//unsigned int timeMin = DS3231_getMin();
-//unsigned int timeSec = DS3231_getSec();
-//
-//const unsigned int dim[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-//uint16_t dc;
-//dc = timeDate;
-//for (unsigned int i = 0; i < (timeMonth - 1); i++) dc += dim[i];
-//if ((timeMonth > 2) && (((timeYear) % 4) == 0)) ++dc;
-//dc = dc + (365 * (timeYear)) + (((timeYear) + 3) / 4) - 1;
-//return ((((((dc * 24L) + timeHour) * 60) + timeMin) * 60) + timeSec) + 946684800 + zoneCorrection;
-//}
+unsigned long DS3231_getUnix(unsigned long zoneCorrection) {
+	unsigned int timeYear = DS3231_getYear();
+	unsigned int timeMonth = DS3231_getMonth();
+	unsigned int timeDate = DS3231_getDate();
+	unsigned int timeHour = DS3231_getHrs();
+	unsigned int timeMin = DS3231_getMin();
+	unsigned int timeSec = DS3231_getSec();
 
-//double normalize(double v) {
-//v = v - floor(v);
-//if (v < 0)
-//v = v + 1;
-//return v;
-//}
+	const unsigned int dim[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	unsigned int dc;
+	dc = timeDate;
+	for (unsigned int i = 0; i < (timeMonth - 1); i++) dc += dim[i];
+	if ((timeMonth > 2) && (((timeYear) % 4) == 0)) ++dc;
+	dc = dc + (365 * (timeYear)) + (((timeYear) + 3) / 4) - 1;
+	return ((((((dc * 24L) + timeHour) * 60) + timeMin) * 60) + timeSec) + 946684800 + zoneCorrection;
+}
 
-//float DS3231_getMoonDay(void) {
-//uint16_t Y = DS3231_getYear() + 2000;
-//unsigned int M = DS3231_getMonth();
-//unsigned int D = DS3231_getDate();
-//float moonDay;
-//double I;
-//uint64_t YY, MM, K1, K2, K3, JD;
-//YY = Y - floor((12 - M) / 10);
-//MM = M + 9;
-//if (MM >= 12) {
-//MM = MM - 12;
-//}
-//K1 = floor(365.25 * (YY + 4712));
-//K2 = floor(30.6 * MM + 0.5);
-//K3 = floor(floor((YY / 100) + 49) * 0.75) - 38;
-//JD = K1 + K2 + D + 59;
-//if (JD > 2299160) {
-//JD = JD - K3;
-//}
-//I = normalize((JD - 2451550.1) / 29.530588853);
-//moonDay = I * 29.53;
-//return moonDay;
-//}
+double normalize(double v) {
+	v = v - floor(v);
+	if (v < 0)
+	v = v + 1;
+	return v;
+}
+
+float DS3231_getMoonDay(void) {
+	unsigned int Y = DS3231_getYear() + 2000;
+	unsigned int M = DS3231_getMonth();
+	unsigned int D = DS3231_getDate();
+	float moonDay;
+	double I;
+	uint64_t YY, MM, K1, K2, K3, JD;
+	YY = Y - floor((12 - M) / 10);
+	MM = M + 9;
+	if (MM >= 12) {
+		MM = MM - 12;
+	}
+	K1 = floor(365.25 * (YY + 4712));
+	K2 = floor(30.6 * MM + 0.5);
+	K3 = floor(floor((YY / 100) + 49) * 0.75) - 38;
+	JD = K1 + K2 + D + 59;
+	if (JD > 2299160) {
+		JD = JD - K3;
+	}
+	I = normalize((JD - 2451550.1) / 29.530588853);
+	moonDay = I * 29.53;
+	return moonDay;
+}

@@ -10,7 +10,7 @@
 #include <avr/pgmspace.h>
 
 #include <string.h>
-#include "ir_read.h"
 #include "uart.h"
+#include "ir_read.h"
 
 #endif /* MAIN_H_ */
