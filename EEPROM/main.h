@@ -6,13 +6,11 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
-#include <avr/pgmspace.h>
 #include <stdio.h>
+#include <avr/pgmspace.h>
 #include <string.h>
-#include <stdint.h>
 
 #include "uart.h"
-#include "twi.h"
-#include "ds3231.h"
+#include "eeprom.h"
 
 #endif /* MAIN_H_ */

@@ -4,7 +4,7 @@
 #include "main.h"
 #include "math.h"
 
-#define DS3231_ADDRESS		0xD0
+#define DS3231_ADDRESS 0x68
 
 unsigned int decToBcd(unsigned int val);
 unsigned int bcdToDec(unsigned int val);

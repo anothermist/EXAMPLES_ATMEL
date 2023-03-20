@@ -3,7 +3,7 @@
 #define delay_ms 5
 
 unsigned int chain = 600;
-unsigned int segment = 25;
+unsigned int segment = 50;
 unsigned char reverse = 1;
 double saturation = 1.0;
 double brightness = 0.1;
