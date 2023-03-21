@@ -28,7 +28,7 @@ static unsigned char twi_restart(void) {
 	return TWI_OK;
 }
 
-static unsigned char twi_addr_write_ack(void){
+static unsigned char twi_addr_write_ack(void) {
 	unsigned int i = 0;
 	TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWIE);
 	while (status != TWIT_ADDR_ACK) {
@@ -39,7 +39,7 @@ static unsigned char twi_addr_write_ack(void){
 }
 
 
-static unsigned char twi_data_write_ack(void){
+static unsigned char twi_data_write_ack(void) {
 	unsigned int i = 0;
 	
 	TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWIE);
@@ -60,7 +60,7 @@ static unsigned char twi_addr_read_ack(void){
 	return TWI_OK;
 }
 
-static unsigned char twi_data_read_ack(unsigned char ack){
+static unsigned char twi_data_read_ack(unsigned char ack) {
 	unsigned int i = 0;
 	if (ack != 0) {
 		TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWIE) | (1 << TWEA);
@@ -79,7 +79,7 @@ static unsigned char twi_data_read_ack(unsigned char ack){
 	return TWI_OK;
 }
 
-unsigned char twi_r(unsigned char addr, unsigned char *data, unsigned int len){
+unsigned char twi_r(unsigned char addr, unsigned char *data, unsigned int len) {
 	
 	unsigned int i = 0;
 	unsigned char err = TWI_OK;
