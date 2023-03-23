@@ -79,7 +79,7 @@ static unsigned char twi_data_read_ack(unsigned char ack) {
 	return TWI_OK;
 }
 
-unsigned char twi_r(unsigned char addr, unsigned char *data, unsigned int len) {
+unsigned char twi_read(unsigned char addr, unsigned char reg, unsigned char *data, unsigned int len) {
 	
 	unsigned int i = 0;
 	unsigned char err = TWI_OK;
@@ -89,7 +89,7 @@ unsigned char twi_r(unsigned char addr, unsigned char *data, unsigned int len) {
 	TWDR = ((addr) << 1) | 0;
 	err = twi_addr_write_ack();
 	if (err != TWI_OK) { twi_stop(); return err; }
-	TWDR = 0x00;
+	TWDR = reg;
 	err = twi_data_write_ack();
 	if (err != TWI_OK) { twi_stop(); return err; }
 	err = twi_restart();
@@ -111,7 +111,7 @@ unsigned char twi_r(unsigned char addr, unsigned char *data, unsigned int len) {
 	return err;
 }
 
-unsigned char twi_w(unsigned char addr, unsigned char *data, unsigned int len) {
+unsigned char twi_write(unsigned char addr, unsigned char reg, unsigned char *data, unsigned int len) {
 	
 	unsigned int i = 0;
 	unsigned char err = TWI_OK;
@@ -121,7 +121,7 @@ unsigned char twi_w(unsigned char addr, unsigned char *data, unsigned int len) {
 	TWDR = ((addr) << 1) | 0;
 	err = twi_addr_write_ack();
 	if (err != TWI_OK) { twi_stop(); return err; }
-	TWDR = 0x00;
+	TWDR = reg;
 	err = twi_data_write_ack();
 	if (err != TWI_OK) { twi_stop(); return err; }
 	

@@ -29,7 +29,7 @@ enum{
 
 
 void twi_init(unsigned long speed);
-unsigned char twi_r(unsigned char addr, unsigned char *data, unsigned int len);
-unsigned char twi_w(unsigned char addr, unsigned char *data, unsigned int len);
+unsigned char twi_read(unsigned char addr, unsigned char reg, unsigned char *data, unsigned int len);
+unsigned char twi_write(unsigned char addr, unsigned char reg, unsigned char *data, unsigned int len);
 
 #endif /* TWI_H_ */
