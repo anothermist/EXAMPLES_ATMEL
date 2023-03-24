@@ -140,5 +140,4 @@ void twi_init(unsigned long speed) {
 	gen_t = (((F_CPU/speed) - 16) / 2) & 0xFF;
 	TWBR = gen_t & 0xFF;
 	TWCR = (1 << TWEN) | (1 << TWIE);
-	//PORTC |= (1 << PORTC5 | 1 << PORTC4);
 }
