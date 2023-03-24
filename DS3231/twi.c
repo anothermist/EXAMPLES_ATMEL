@@ -19,13 +19,6 @@ void twi_stop(void) {
 	TWCR = (1 << TWINT) | (1 << TWSTO) | (1 << TWEN) | (1 << TWIE);
 }
 
-void twi_byte_send_by_addr(unsigned char b,unsigned char addr) {
-	twi_start();
-	twi_byte_send(addr << 1);
-	twi_byte_send(b);
-	twi_stop();
-}
-
 void twi_addr_write_ack(void) {
 	TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWIE);
 	while (!(TWCR & (1 << TWINT))) { };
@@ -107,4 +100,11 @@ void twi_addr_send(unsigned char addr) {
 	TWDR = (addr << 1) | 0;
 	TWCR = (1 << TWINT) | (1 << TWEN);
 	while (!(TWCR & (1 << TWINT))) { };
+}
+
+void twi_byte_send_by_addr(unsigned char b,unsigned char addr) {
+	twi_start();
+	twi_byte_send(addr << 1);
+	twi_byte_send(b);
+	twi_stop();
 }
