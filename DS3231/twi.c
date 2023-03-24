@@ -38,7 +38,6 @@ static unsigned char twi_addr_write_ack(void) {
 	return TWI_OK;
 }
 
-
 static unsigned char twi_data_write_ack(void) {
 	unsigned int i = 0;
 	
