@@ -102,9 +102,9 @@ void twi_addr_send(unsigned char addr) {
 	while (!(TWCR & (1 << TWINT))) { };
 }
 
-void twi_byte_send_by_addr(unsigned char b,unsigned char addr) {
+void twi_byte_send_by_addr(unsigned char b, unsigned char addr) {
 	twi_start();
-	twi_byte_send(addr << 1);
+	twi_addr_send(addr);
 	twi_byte_send(b);
 	twi_stop();
 }
