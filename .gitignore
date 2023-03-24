@@ -1,5 +1,9 @@
 */.vs
-*/Debug
+*.eep
+*.lss
+*.srec
+*Makefile
+*.mk
 # Prerequisites
 *.d
 
