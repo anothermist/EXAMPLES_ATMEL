@@ -6,16 +6,15 @@ int main(void) {
 	char start[] = "\n\rUART OK\n\r";
 	
 	uart_init(9600, 0);
-	twi_init(100000);
+	twi_init();
 
-	sei();
 	uart_send_string(start);
 
 	//DS3231_setSec(0);
-	//DS3231_setMin(14);
-	//DS3231_setHrs(5);
-	//DS3231_setWDay(1);
-	//DS3231_setDate(20);
+	//DS3231_setMin(44);
+	//DS3231_setHrs(23);
+	//DS3231_setWDay(5);
+	//DS3231_setDate(24);
 	//DS3231_setMonth(3);
 	//DS3231_setYear(23);
 

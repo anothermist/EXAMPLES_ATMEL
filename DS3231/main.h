@@ -2,6 +2,8 @@
 #define MAIN_H_
 
 #define F_CPU 16000000UL
+#define F_SCL     400000
+#define UART_BAUD   9600
 
 #include <avr/io.h>
 #include <util/delay.h>
