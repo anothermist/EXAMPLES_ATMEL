@@ -1,10 +1,10 @@
 #include "uart.h"
 
-volatile static unsigned char rx_buffer[RX_BUFFER_SIZE] = {0};
+volatile static unsigned char rx_buffer[RX_BUFFER_SIZE] = { 0 };
 volatile static unsigned int rx_count = 0;
 volatile static unsigned char uart_tx_busy = 1;
 
-ISR(USART_RX_vect){
+ISR(USART_RX_vect) {
 	
 	volatile static unsigned int rx_write_pos = 0;
 	
@@ -57,14 +57,14 @@ void uart_send_string(char *c) {
 	uart_send_byte(c[i]);
 }
 
-char uart_read(void){
+char uart_read(void) {
 	static unsigned int rx_read_pos = 0;
 	unsigned char data = 0;
 	
 	data = rx_buffer[rx_read_pos];
 	rx_read_pos++;
 	rx_count--;
-	if(rx_read_pos >= RX_BUFFER_SIZE) {
+	if (rx_read_pos >= RX_BUFFER_SIZE) {
 		rx_read_pos = 0;
 	}
 	return data;
