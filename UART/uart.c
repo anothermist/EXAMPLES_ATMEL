@@ -4,14 +4,14 @@ volatile static unsigned char rx_buffer[RX_BUFFER_SIZE] = { 0 };
 volatile static unsigned int rx_count = 0;
 volatile static unsigned char uart_tx_busy = 1;
 
-ISR(USART_RX_vect){
+ISR(USART_RX_vect) {
 	
 	volatile static unsigned int rx_write_pos = 0;
 	
 	rx_buffer[rx_write_pos] = UDR0;
 	rx_count++;
 	rx_write_pos++;
-	if (rx_write_pos >= RX_BUFFER_SIZE) {
+	if(rx_write_pos >= RX_BUFFER_SIZE) {
 		rx_write_pos = 0;
 	}
 }
@@ -23,7 +23,7 @@ ISR(USART_TX_vect) {
 void uart_init(unsigned long baud, unsigned char high_speed) {
 	
 	unsigned char speed = 16;
-	if (high_speed != 0) {
+	if(high_speed != 0) {
 		speed = 8;
 		UCSR0A |= 1 << U2X0;
 	}
@@ -36,13 +36,13 @@ void uart_init(unsigned long baud, unsigned char high_speed) {
 }
 
 void uart_send_byte(unsigned char c) {
-	while (uart_tx_busy == 0);
+	while(uart_tx_busy == 0);
 	uart_tx_busy = 0;
 	UDR0 = c;
 }
 
 void uart_send_array(char *c, unsigned int len) {
-	for (unsigned int i = 0; i < len; i++) {
+	for(unsigned int i = 0; i < len; i++) {
 		uart_send_byte(c[i]);
 	}
 }
@@ -52,6 +52,7 @@ void uart_send_string(char *c) {
 	do {
 		uart_send_byte(c[i]);
 		i++;
+		
 	} while(c[i] != '\0');
 	uart_send_byte(c[i]);
 }
@@ -63,7 +64,7 @@ char uart_read(void) {
 	data = rx_buffer[rx_read_pos];
 	rx_read_pos++;
 	rx_count--;
-	if(rx_read_pos >= RX_BUFFER_SIZE) {
+	if (rx_read_pos >= RX_BUFFER_SIZE) {
 		rx_read_pos = 0;
 	}
 	return data;

@@ -8,7 +8,11 @@ int main(void) {
 	uart_init(9600, 0);
 	twi_init();
 
-	uart_send_string(start);
+	// uart_send_string(start);
+	
+	while (!(UCSR0A & (1<<RXC0))) {
+	}
+	DS3231_setYear(UDR0);
 
 	//DS3231_setSec(0);
 	//DS3231_setMin(44);
@@ -34,7 +38,7 @@ int main(void) {
 			rtc_Year = DS3231_getYear();
 
 			char time_string[29];
-			snprintf(time_string, 29, "\rTIME %02d:%02d:%02d %02d %02d %02d %02d",
+			snprintf(time_string, 32, "\rTIME %02d:%02d:%02d %02d %02d %02d %02d\n",
 			rtc_Hrs, rtc_Min, rtc_Sec, rtc_WDay, rtc_Date, rtc_Month, rtc_Year);
 			uart_send_string(time_string);
 		}
