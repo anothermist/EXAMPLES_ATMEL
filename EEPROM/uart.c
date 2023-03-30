@@ -9,9 +9,7 @@ ISR(USART_RX_vect) {
 	rx_buffer[rx_write_pos] = UDR0;
 	rx_count++;
 	rx_write_pos++;
-	if(rx_write_pos >= RX_BUFFER_SIZE) {
-		rx_write_pos = 0;
-	}
+	if (rx_write_pos >= RX_BUFFER_SIZE) rx_write_pos = 0;
 }
 
 ISR(USART_TX_vect) {
