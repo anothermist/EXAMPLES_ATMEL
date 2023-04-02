@@ -38,11 +38,11 @@
 #define IR_LOW (!(IR_PIN & _BV(IR_PIN_NUM)))
 #define IR_VAL (IR_PIN & _BV(IR_PIN_NUM))
 
-void irrTimerInit();
-unsigned int irrDecode();
+void irr_init();
+unsigned int irr_decode();
 
-unsigned int irrProtocolNEC(unsigned int code);
-unsigned int irrProtocolRC5(unsigned int code);
-unsigned int irrProtocolSIRC(unsigned int code);
+unsigned int irr_protocol_NEC(unsigned int code);
+unsigned int irr_protocol_RC5(unsigned int code);
+unsigned int irr_protocol_SIRC(unsigned int code);
 
 #endif /* IR_READ_H_ */

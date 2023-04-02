@@ -5,30 +5,30 @@ unsigned int code = 0;
 unsigned int time;
 unsigned char protocolLetter;
 
-void irrTimerInit() {
+void irr_init() {
 	TIMER_INIT();
 	if (IR_ENABLE_PULLUP)
 	IR_PORT |= _BV(IR_PIN_NUM);
 }
 
-unsigned int irrDecode() {
+unsigned int irr_decode() {
 	time = TIMER_REG;
 	TIMER_REG = 0;
 
 	if (time > CONV(9000) && time < CONV(9800)) { // Between 9ms and 9.8ms => NEC protocol
 		protocolLetter = 'N';
 		#ifdef ENABLED_PROTOCOL_NEC
-		code = irrProtocolNEC(code);
+		code = irr_protocol_NEC(code);
 		#endif
 		} else if (time > CONV(800) && time < CONV(1200)) { // Between 0.8ms and 1.2ms => RC5 protocol
 		protocolLetter = 'R';
 		#ifdef ENABLED_PROTOCOL_RC5
-		code = irrProtocolRC5(code);
+		code = irr_protocol_RC5(code);
 		#endif
 		} else if (time > CONV(2000) && time < CONV(2800)) { // Between 2ms and 2.8ms => SIRC protocol
 		protocolLetter = 'S';
 		#ifdef ENABLED_PROTOCOL_SIRC
-		code = irrProtocolSIRC(code);
+		code = irr_protocol_SIRC(code);
 		#endif
 		} else {
 		protocolLetter = 'U';
@@ -39,7 +39,7 @@ unsigned int irrDecode() {
 }
 
 #ifdef ENABLED_PROTOCOL_NEC
-unsigned int irrProtocolNEC(unsigned int code) {
+unsigned int irr_protocol_NEC(unsigned int code) {
 	unsigned char bitVal;
 	unsigned int time;
 	unsigned char i;
@@ -106,7 +106,7 @@ unsigned int irrProtocolNEC(unsigned int code) {
 #endif
 
 #ifdef ENABLED_PROTOCOL_RC5
-unsigned int irrProtocolRC5(unsigned int code) {
+unsigned int irr_protocol_RC5(unsigned int code) {
 	unsigned char repeatBit;
 	unsigned char i;
 
@@ -178,7 +178,7 @@ unsigned int irrProtocolRC5(unsigned int code) {
 #endif
 
 #ifdef ENABLED_PROTOCOL_SIRC
-unsigned int irrProtocolSIRC(unsigned int code) {
+unsigned int irr_protocol_SIRC(unsigned int code) {
 	unsigned int time;
 	unsigned char i;
 	static unsigned int lastCode = 0;

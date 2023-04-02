@@ -8,11 +8,9 @@ int main(void)
 	
 	DDRD |= 0xF0; //0b11110000
 	uart_init(9600, 0);
-
-	sei();
 	uart_send_string(start);
-	while (1)
-	{
+	
+	while (1) {
 		
 		if (uart_read_count() > 0) {
 			data = uart_read();

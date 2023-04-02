@@ -1,23 +1,18 @@
 #include "main.h"
 
 int main(void) {
-
-	DDRD |= 0xF0; //0b11110000
+	
+	irr_init();
 	uart_init(9600, 0);
-	sei();
-	
-	char start[] = "UART OK\r\n";
-	
+	char start[] = "UART OK\r\n";	
 	uart_send_string(start);
-	DDRD = 0xFF; PORTD = 0x00;
 	
-	irrTimerInit();
 	
 	while (1) {
 		
 		if (IR_HIGH) {
 			
-			unsigned int irrValueNow = irrDecode();
+			unsigned int irrValueNow = irr_decode();
 			
 			if (irrValueNow) {
 				char code_string[16];

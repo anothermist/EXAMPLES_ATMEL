@@ -29,6 +29,7 @@ void uart_init(unsigned long baud, unsigned char high_speed) {
 	UBRR0H = (baud & 0x0F00) >> 8;
 	UBRR0L = (baud & 0x00FF);
 	UCSR0B |= (1 << TXEN0) | (1 << RXEN0) | (1 << TXCIE0) | (1 << RXCIE0);
+	sei();
 }
 
 void uart_send_byte(unsigned char c) {

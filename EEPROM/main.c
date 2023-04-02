@@ -10,8 +10,7 @@ int main(void) {
 	DDRD &= 0xF0;
 	DDRB &= 0x0F;
 	uart_init(9600, 0);
-	
-	sei();
+
 	//uart_send_string(start);
 	
 	err = EEPROM_read(10, &run);

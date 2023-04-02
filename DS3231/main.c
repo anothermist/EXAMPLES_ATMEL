@@ -3,11 +3,10 @@
 unsigned char rtc_Sec, rtc_Min, rtc_Hrs, rtc_WDay, rtc_Date, rtc_Month, rtc_Year, last_Sec;
 
 int main(void) {
-	char start[] = "UART OK\r\n";
 	
-	uart_init(9600, 0);
 	twi_init();
-
+	char start[] = "UART OK\r\n";
+	uart_init(9600, 0);
 	uart_send_string(start);
 
 	//DS3231_setSec(0);
