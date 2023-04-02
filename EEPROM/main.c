@@ -3,7 +3,7 @@
 char print_buffer[64] = { 0 };
 
 int main(void) {
-	//char start[] = "Program Start \n\r";
+	//char start[] = "Program Start \r\n";
 	unsigned char run = 0;
 	unsigned char err = 0;
 	

@@ -2,7 +2,7 @@
 
 int main(void)
 {
-	char start[] = "UART OK \n\r";
+	char start[] = "UART OK\r\n";
 	char data = 'A';
 	unsigned char counter = 0x10; //0b00010000
 	

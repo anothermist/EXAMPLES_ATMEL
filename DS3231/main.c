@@ -3,7 +3,7 @@
 unsigned char rtc_Sec, rtc_Min, rtc_Hrs, rtc_WDay, rtc_Date, rtc_Month, rtc_Year, last_Sec;
 
 int main(void) {
-	char start[] = "UART OK\n";
+	char start[] = "UART OK\r\n";
 	
 	uart_init(9600, 0);
 	twi_init();
@@ -34,7 +34,7 @@ int main(void) {
 			rtc_Year = DS3231_getYear();
 
 			char time_string[29];
-			snprintf(time_string, 32, "\rTIME %02d:%02d:%02d %02d %02d %02d %02d\n",
+			snprintf(time_string, 32, "\rTIME %02d:%02d:%02d %02d %02d %02d %02d",
 			rtc_Hrs, rtc_Min, rtc_Sec, rtc_WDay, rtc_Date, rtc_Month, rtc_Year);
 			uart_send_string(time_string);
 		}
