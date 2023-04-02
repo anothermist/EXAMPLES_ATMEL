@@ -23,8 +23,7 @@ int main(void)
 		palette[0][i] = rgb.r; palette[1][i] = rgb.g; palette[2][i] = rgb.b;
 	}
 
-	while (1)
-	{
+	while (1) {
 		if (reverse) {
 			for (unsigned int i = 0; i < chain; i++) {
 				unsigned int paletteIndex = ((360 / segment) * ((i + offset - 1) % segment));
