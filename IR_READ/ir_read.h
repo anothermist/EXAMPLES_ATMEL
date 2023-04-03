@@ -7,9 +7,9 @@
 #define ENABLED_PROTOCOL_RC5
 #define ENABLED_PROTOCOL_SIRC
 
-#define IR_PIN PINB
-#define IR_PIN_NUM PINB5
-#define IR_PORT PORTB
+#define IR_PIN PINC
+#define IR_PIN_NUM PINC0
+#define IR_PORT PORTC
 
 #define IR_ENABLE_PULLUP 1
 

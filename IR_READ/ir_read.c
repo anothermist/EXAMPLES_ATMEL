@@ -53,7 +53,7 @@ unsigned int irr_protocol_NEC(unsigned int code) {
 	time = TIMER_REG;
 	TIMER_REG = 0;
 
-	PORTC ^= _BV(PINC5);
+	IR_PORT ^= _BV(IR_PIN_NUM);
 	
 	if (time > CONV(4200)) { // 4200 us
 		repeatCount = 0; // regular button press
@@ -84,7 +84,7 @@ unsigned int irr_protocol_NEC(unsigned int code) {
 			bitVal = 0;
 		}
 
-		PORTC ^= _BV(PINC5);
+		IR_PORT ^= _BV(IR_PIN_NUM);
 		
 		if ((i < 8) || (i >= 16 && i < 24)) {
 			code = code << 1;
@@ -121,7 +121,7 @@ unsigned int irr_protocol_RC5(unsigned int code) {
 	TIMER_REG = 0;
 
 	repeatBit = IR_VAL; // Read "repeat" bit
-	PORTC ^= _BV(PINC5);
+	IR_PORT ^= _BV(IR_PIN_NUM);
 
 	// Move 1760us to the first data bit
 	while (TIMER_REG < CONV(880));
@@ -129,7 +129,7 @@ unsigned int irr_protocol_RC5(unsigned int code) {
 
 	for (i = 0; i < 11; i++) { // Read 12 data bits (5 address & 7 command)
 		code = code << 1;
-		PORTC ^= _BV(PINC5);
+		IR_PORT ^= _BV(IR_PIN_NUM);
 		errorBit = IR_VAL;
 
 		//while (TIMER_REG < CONV(RC5_DELAY_0));
@@ -146,7 +146,7 @@ unsigned int irr_protocol_RC5(unsigned int code) {
 		while (TIMER_REG < CONV(400));
 		TIMER_REG = 0;
 
-		PORTC ^= _BV(PINC5);
+		IR_PORT ^= _BV(IR_PIN_NUM);
 		
 		if (IR_VAL)
 		code |= 0x0001;
